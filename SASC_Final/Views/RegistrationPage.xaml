@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SASC_Final.ViewModels"  
+             xmlns:helper="clr-namespace:SASC_Final.Helpers"  
+             
+             x:Class="SASC_Final.Views.RegistrationPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Назад" Clicked="ToolbarItem_Clicked"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <helper:AllFieldsFilledConverter x:Key="AllFieldsFilledConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ScrollView>        
+        <StackLayout Padding="10">
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"/>
+
+            <Label Text="Email" />
+            <Entry Text="{Binding Email}" />
+
+            <Label Text="Username" />
+            <Entry Text="{Binding Username}" />
+
+            <Label Text="Password" />
+            <Entry Text="{Binding Password}" IsPassword="True" />
+
+            <Label Text="First Name" />
+            <Entry Text="{Binding FirstName}" />
+
+            <Label Text="Last Name" />
+            <Entry Text="{Binding LastName}" />
+
+            <Label Text="Middle Name" />
+            <Entry Text="{Binding MiddleName}" />
+
+            <Label Text="Record Book Number" />
+            <Entry Text="{Binding RecordBookNumber}" />
+
+            <Button Text="Register" Command="{Binding RegisterCommand}">
+                <Button.IsEnabled>
+                    <MultiBinding Converter="{StaticResource AllFieldsFilledConverter}">
+                        <Binding Path="Email" />
+                        <Binding Path="Username" />
+                        <Binding Path="Password" />
+                        <Binding Path="FirstName" />
+                        <Binding Path="LastName" />
+                        <Binding Path="MiddleName" />
+                        <Binding Path="RecordBookNumber" />
+                    </MultiBinding>
+                </Button.IsEnabled>
+            </Button>       
+
+          
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

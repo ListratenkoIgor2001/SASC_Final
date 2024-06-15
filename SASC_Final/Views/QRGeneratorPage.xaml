@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms" 
+             xmlns:zxcm="clr-namespace:ZXing.Common;assembly=zxing.portable" 
+             xmlns:vm="clr-namespace:SASC_Final.ViewModels" 
+             x:DataType="vm:QRGeneratorViewModel"
+             xmlns:zx="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+             x:Class="SASC_Final.Views.QRGeneratorPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Назад" Clicked="ToolbarItem_Clicked"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            <!--
+            <Image x:Name="qrCodeImage"
+               VerticalOptions="CenterAndExpand"
+               HorizontalOptions="Center"
+               WidthRequest="300"
+               HeightRequest="300" />
+            <zxing:ZXingBarcodeImageView 
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand"
+                BarcodeFormat="QR_CODE"
+                BarcodeValue="{Binding QRValue}">
+                <zxing:ZXingBarcodeImageView.BarcodeOptions>
+                    <zxcm:EncodingOptions Width="500" Height="500" />
+                </zxing:ZXingBarcodeImageView.BarcodeOptions>
+            </zxing:ZXingBarcodeImageView>
+            -->
+            <zxing:ZXingBarcodeImageView x:Name="qrCodeImageView" 
+                                         BarcodeValue="{Binding QRCodeString}" 
+                                         HeightRequest="300" 
+                                         WidthRequest="300" 
+                                         HorizontalOptions="Center"
+                                         VerticalOptions="Center"
+                                         >
+                <zx:ZXingBarcodeImageView.BarcodeOptions>
+                    <zxcm:EncodingOptions Width="300" Height="300" />
+                </zx:ZXingBarcodeImageView.BarcodeOptions>
+            </zxing:ZXingBarcodeImageView>
+            <Label Padding="3" Margin="3" HorizontalOptions="CenterAndExpand" x:Name="timerLabel" Text="{Binding TimerText}" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

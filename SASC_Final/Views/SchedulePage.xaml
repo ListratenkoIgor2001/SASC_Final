@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SASC_Final.ViewModels"  
+             xmlns:model="clr-namespace:SASC_Final.Models"  
+             x:Class="SASC_Final.Views.SchedulePage"
+             Title="{Binding Title}">
+    <ContentPage.ToolbarItems>
+       <!-- <ToolbarItem Text="Unadd" Command="{Binding LoadItemsCommand}" />
+        <ToolbarItem Text="Add" Command="{Binding LoadItemsCommand}" />
+        -->
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <RefreshView x:DataType="vm:ScheduleViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+            <StackLayout>
+                <CollectionView x:Name="ScheduleListView" SelectionMode="Single" IsVisible="true"/>
+                <Label x:Name="labelNotFound" Text="В этот день нет занятий" HorizontalOptions="Center" IsVisible="false" FontAttributes="Bold"/>
+            </StackLayout>
+        </RefreshView>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+              xmlns:zxcm="clr-namespace:ZXing.Common;assembly=zxing.portable" 
+             x:Class="SASC_Final.Views.QRScanerPage"
+             xmlns:vm="clr-namespace:SASC_Final.ViewModels"
+             xmlns:zx="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms">
+    <ContentPage.BindingContext>
+        <vm:QRScannerViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Назад" Clicked="ToolbarItem_Clicked"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+            <zxing:ZXingScannerView x:Name="scannerView"
+                                OnScanResult="OnScanResult"
+                                IsScanning="{Binding IsScanning}"
+                                Options="{Binding ScanningOptions}"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="FillAndExpand" >
+                
+            </zxing:ZXingScannerView>
+            <zxing:ZXingDefaultOverlay TopText=""/>
+            
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
