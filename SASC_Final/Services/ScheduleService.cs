@@ -68,20 +68,20 @@ namespace SASC_Final.Services
             {
 
                 var client = new RestClient(_baseUri);
-                var response = client.GetAsync(request);
-                response.Wait();
+                var response = await client.GetAsync(request);
+
                 //RestResponse response = await AppData.RestClient.GetAsync(request);
-                if (response.Result.IsSuccessful)
+                if (response.IsSuccessful)
                 {
-                    Console.WriteLine(response.Result.Content);
-                    var result = JsonConvert.DeserializeObject<List<PlannedLessonDto>>(response.Result.Content);
+                    Console.WriteLine(response.Content);
+                    var result = JsonConvert.DeserializeObject<List<PlannedLessonDto>>(response.Content);
                     return result;
                     //ScheduleResponseDto result = JsonConvert.DeserializeObject<ScheduleResponseDto>(response.Result.Content);
                     //return result.GetWeekShedule();
                 }
                 else
                 {
-                    throw new Exception(response.Result.ErrorMessage);
+                    throw new Exception(response.ErrorMessage);
                 }
 
             }
@@ -98,31 +98,31 @@ namespace SASC_Final.Services
             RestRequest request;
             if (AppData.Role == "Student")
             {
-                request = new RestRequest($"Schedule/Student/{user.Id}/6.11.2024");
+                request = new RestRequest($"Schedule/Student/{user.Id}");
                 //request = new RestRequest($"Schedule/StudentsGroups/{user.Group}");
             }
             else
             {
-                request = new RestRequest($"Schedule/Employee/{user.Id}/6.11.2024");
+                request = new RestRequest($"Schedule/Employee/{user.Id}");
                 //request = new RestRequest($"Schedule/Employees/{user.UrlId}");
             }
             try
             {
 
                 var client = new RestClient(_baseUri);
-                var response = client.GetAsync(request);
-                response.Wait();
+                var response = await client.GetAsync(request);
+        
                 //RestResponse response = await AppData.RestClient.GetAsync(request);
-                if (response.Result.IsSuccessful)
+                if (response.IsSuccessful)
 {
-                    var result = JsonConvert.DeserializeObject<List<PlannedLessonDto>>(response.Result.Content);
+                    var result = JsonConvert.DeserializeObject<List<PlannedLessonDto>>(response.Content);
                     return result;
                     //ScheduleResponseDto result = JsonConvert.DeserializeObject<ScheduleResponseDto>(response.Result.Content);
                     //return result.GetWeekShedule();
                 }
                 else
                 {
-                    throw new Exception(response.Result.ErrorMessage);
+                    throw new Exception(response.ErrorMessage);
                 }
 
             }

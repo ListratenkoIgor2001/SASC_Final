@@ -32,7 +32,7 @@ namespace SASC_Final.Models
         private List<string> auditories { get; set; }
         private string startLessonTime { get; set; }
         private string endLessonTime { get; set; }
-        private string numSubgroup { get; set; }
+        private int numSubgroup { get; set; }
         private string subject { get; set; }
         private string subjectFullName { get; set; }
         private string lessonTypeAbbrev { get; set; }
@@ -55,6 +55,8 @@ namespace SASC_Final.Models
         public string Start { get => startLessonTime.ToShortDateTime(); }
         public string End { get => endLessonTime.ToShortDateTime(); }
         public string Subject { get => $"{subject} ({lessonTypeAbbrev})"; }
+        public int SubgroupNumber { get => numSubgroup; }
+        public string Subgroup { get => numSubgroup == 0 ? "" :numSubgroup.ToString(); }
         public string LessonType { get => $"{lessonTypeAbbrev}"; }
         public string Employee { get => employee.GetLastNameInitiales(); }
         public string Groups { get => studentGroups.GetGroups(); }
@@ -68,7 +70,7 @@ namespace SASC_Final.Models
             this.auditories = map.auditories;
             this.endLessonTime = map.endLessonTime;
             this.lessonTypeAbbrev = map.lessonTypeAbbrev;
-            this.numSubgroup = map.numSubgroup.ToString();
+            this.numSubgroup = map.numSubgroup;
             this.startLessonTime = map.startLessonTime;
             this.iisStudentGroups = map.studentGroups;
             this.subject = map.subject;
@@ -82,10 +84,11 @@ namespace SASC_Final.Models
             this.auditories = new List<string> { map.Auditory};
             this.endLessonTime = map.PlannedEndTime;
             this.lessonTypeAbbrev = map.LessonType;
-            this.numSubgroup = map.SubGroup == "0" ? "" : map.SubGroup;
+            this.numSubgroup =  map.SubGroup;
             this.startLessonTime = map.PlannedTime;
             this.studentGroups = map.Groups.ToList();
             this.subject = map.Subject.Abbrev;
+            this.subjectFullName = map.Subject?.FullName;
             this.subjectFullName = map.Subject.FullName;
             this.employee = map.Employee;
         }

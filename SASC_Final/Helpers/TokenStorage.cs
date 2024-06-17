@@ -9,19 +9,19 @@ namespace SASC_Final.Helpers
 {
     public static class TokenStorage
     {
-        public static async Task<string> GetTokenAsync(string fieldName = "authtoken")
+        public static async Task<string> GetTokenAsync(string tokenName = "authtoken")
         {
-            return await SecureStorage.GetAsync(fieldName);
+            return await SecureStorage.GetAsync(tokenName);
         }
 
-        public static async Task SetTokenAsync(string token, string fieldName = "authtoken")
+        public static async Task SetTokenAsync(string token, string tokenName = "authtoken")
         {
-            await SecureStorage.SetAsync(fieldName, token);
+            await SecureStorage.SetAsync(tokenName, token);
         }
 
-        public static void RemoveToken(string fieldName = "authtoken")
+        public static void RemoveToken(string tokenName = "authtoken")
         {
-            SecureStorage.Remove(fieldName);
+            SecureStorage.Remove(tokenName);
         }
     }
 }

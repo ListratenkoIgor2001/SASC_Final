@@ -11,11 +11,14 @@
         -->
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <RefreshView x:DataType="vm:ScheduleViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
-            <StackLayout>
-                <CollectionView x:Name="ScheduleListView" SelectionMode="Single" IsVisible="true"/>
-                <Label x:Name="labelNotFound" Text="В этот день нет занятий" HorizontalOptions="Center" IsVisible="false" FontAttributes="Bold"/>
-            </StackLayout>
-        </RefreshView>
+        <StackLayout>
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"/>
+            <RefreshView x:DataType="vm:ScheduleViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+                <StackLayout>
+                    <CollectionView x:Name="ScheduleListView" SelectionMode="Single" IsVisible="true"/>
+                    <Label x:Name="labelNotFound" Text="В этот день нет занятий" HorizontalOptions="Center" IsVisible="false" FontAttributes="Bold"/>
+                </StackLayout>
+            </RefreshView>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

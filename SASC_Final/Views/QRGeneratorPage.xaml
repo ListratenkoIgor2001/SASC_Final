@@ -28,6 +28,7 @@
                 </zxing:ZXingBarcodeImageView.BarcodeOptions>
             </zxing:ZXingBarcodeImageView>
             -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"/>
             <zxing:ZXingBarcodeImageView x:Name="qrCodeImageView" 
                                          BarcodeValue="{Binding QRCodeString}" 
                                          HeightRequest="300" 

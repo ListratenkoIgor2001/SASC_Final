@@ -9,9 +9,10 @@ namespace SASC_Final.Services
 {
     public interface IAuth
     {
-        Task<string> Login(string username, string password);
+        //Task<string> Login(string username, string password);
+        Task<string> Login(LoginModel model);
         Task<string> Register(RegistrationModel model);
         //string Register(UserRegisterModel model)
-        void Logout();
+        Task Logout();
     }
 }

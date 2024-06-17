@@ -1,4 +1,7 @@
-﻿using RestSharp;
+﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+
+using RestSharp;
 
 using SASC_Final.Helpers;
 using SASC_Final.Models;
@@ -10,6 +13,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 //using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -149,45 +153,78 @@ namespace SASC_Final.Services
                 return $"Error {response.Result.StatusCode}. {response.Result.ErrorMessage}\n{response.Result.Content}"; 
             }
         }
-             
 
-        public void Logout()
+        public async Task<string> Login(LoginModel loginModel)
         {
-            var AppData = DependencyService.Get<AppData>();
-            var token = TokenStorage.GetTokenAsync().Result;
+            var client = new RestClient(_baseUri);
+            RestResponse response = new RestResponse();
+            var request = new RestRequest($"Account/SignIn", Method.Post);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddJsonBody(loginModel);
+            try
+            {
+                response = await client.ExecuteAsync(request);
+                if (response.IsSuccessful)
+                {
+                    var result = JObject.Parse(response.Content);
+                    var token = result["token"].ToString();
+                    await TokenStorage.SetTokenAsync(token);
+                    var claims = JwtHelper.GetClaims(token);
+
+                    return token;
+                }
+                else
+                {
+                    return $"Error {response.StatusCode}. {response.ErrorMessage}\n{response.Content}";
+                }
+            }
+            catch
+            {
+                return $"Error {response.StatusCode}. {response.ErrorMessage}\n{response.Content}";
+            }
+        }
+
+        public async Task Logout()
+        {
+
+            var client = new RestClient(_baseUri);
+            var token = await TokenStorage.GetTokenAsync();
             if(!string.IsNullOrEmpty(token))
             { 
-                var request = new RestRequest("Account/Logout")
+                var request = new RestRequest("Account/SignOut")
                 //var request = new RestRequest("auth/Account/Logout")
                     .AddHeader("Authorization", $"Bearer {token}");
-                AppData.RestClient.GetAsync(request);
+                await client.PostAsync(request);
             }
+            TokenStorage.RemoveToken();
+            var AppData = DependencyService.Get<AppData>();
             AppData.Clear();
         }
 
         public async Task<string> Register(RegistrationModel model)
         {
             return null;
-            var request = new RestRequest($"Account/Register", Method.Post);
-            request.RequestFormat = DataFormat.Json;
-            request.AddJsonBody(model);
             var client = new RestClient(_baseUri);
-            var response = client.ExecuteAsync(request);
+            RestResponse response = new RestResponse();
+            var request = new RestRequest($"Account/SignUp", Method.Post);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddJsonBody(model);
             try
             {
-                response.Wait();
-                if (response.Result.IsSuccessful)
+                response = await client.ExecuteAsync(request);
+                
+                if (response.IsSuccessful)
                 {
                     return null;
                 }
                 else
                 {
-                    return $"Error {response.Result.StatusCode}. {response.Result.ErrorMessage}\n{response.Result.Content}";
+                    return $"Error {response.StatusCode}. {response.ErrorMessage}\n{response.Content}";
                 }
             }
             catch
             {
-                return $"Error {response.Result.StatusCode}. {response.Result.ErrorMessage}\n{response.Result.Content}";
+                return $"Error {response.StatusCode}. {response.ErrorMessage}\n{response.Content}";
             }
         }
     }  

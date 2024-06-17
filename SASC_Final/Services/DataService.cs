@@ -50,17 +50,17 @@ namespace SASC_Final.Services
             try
             {
                 var client = new RestClient(_baseUri);
-                var response = client.GetAsync(request);
-                response.Wait();
+                var response = await client.GetAsync(request);
+        
                 //RestResponse response = await AppData.RestClient.GetAsync(request);
-                if (response.Result.IsSuccessful)
+                if (response.IsSuccessful)
                 {
-                    var result = JsonConvert.DeserializeObject<StudentsStream>(response.Result.Content);
+                    var result = JsonConvert.DeserializeObject<StudentsStream>(response.Content);
                     return result;
                 }
                 else
                 {
-                    throw new Exception(response.Result.ErrorMessage);
+                    throw new Exception(response.ErrorMessage);
                 }
             }
             catch(Exception e)
@@ -76,11 +76,11 @@ namespace SASC_Final.Services
             request = new RestRequest($"Employees/{id}");
             //request.AddHeader("Authorization", $"Bearer {TokenStorage.GetTokenAsync().Result}");
             var client = new RestClient(_baseUri);
-            var response = client.GetAsync(request);
-            if (response.Result.IsSuccessful)
+            var response = await client.GetAsync(request);
+            if (response.IsSuccessful)
             {
-                Console.WriteLine(response.Result.Content);
-                var result = JsonConvert.DeserializeObject<EmployeeDto>(response.Result.Content);
+                Console.WriteLine(response.Content);
+                var result = JsonConvert.DeserializeObject<EmployeeDto>(response.Content);
                 return result;
             }
             return null;
@@ -91,11 +91,11 @@ namespace SASC_Final.Services
             request = new RestRequest($"Students/{id}");
             //request.AddHeader("Authorization", $"Bearer {TokenStorage.GetTokenAsync().Result}");
             var client = new RestClient(_baseUri);
-            var response = client.GetAsync(request);
-            if (response.Result.IsSuccessful)
+            var response = await client.GetAsync(request);
+            if (response.IsSuccessful)
             {
-                Console.WriteLine(response.Result.Content);
-                var result = JsonConvert.DeserializeObject<StudentDto>(response.Result.Content);
+                Console.WriteLine(response.Content);
+                var result = JsonConvert.DeserializeObject<StudentDto>(response.Content);
                 return result;
             }
             return null;
@@ -110,11 +110,11 @@ namespace SASC_Final.Services
             request.AddQueryParameter("groupsNumber", groupsNumber);
             //request.AddHeader("Authorization", $"Bearer {TokenStorage.GetTokenAsync().Result}");
             var client = new RestClient(_baseUri);
-            var response = client.GetAsync(request);
-            if (response.Result.IsSuccessful)
+            var response = await client.GetAsync(request);
+            if (response.IsSuccessful)
             {
-                Console.WriteLine(response.Result.Content);
-                var result = JsonConvert.DeserializeObject<List<StudentDto>>(response.Result.Content);
+                Console.WriteLine(response.Content);
+                var result = JsonConvert.DeserializeObject<List<StudentDto>>(response.Content);
                 return result;
             }
             return null;
@@ -126,11 +126,11 @@ namespace SASC_Final.Services
             request = new RestRequest($"Students/PlannedLesson/{id}");
             //request.AddHeader("Authorization", $"Bearer {TokenStorage.GetTokenAsync().Result}");
             var client = new RestClient(_baseUri);
-            var response = client.GetAsync(request);
-            if (response.Result.IsSuccessful)
+            var response = await client.GetAsync(request);
+            if (response.IsSuccessful)
             {
-                Console.WriteLine(response.Result.Content);
-                var result = JsonConvert.DeserializeObject<List<StudentDto>>(response.Result.Content);
+                Console.WriteLine(response.Content);
+                var result = JsonConvert.DeserializeObject<List<StudentDto>>(response.Content);
                 return result;
             }
             return null;

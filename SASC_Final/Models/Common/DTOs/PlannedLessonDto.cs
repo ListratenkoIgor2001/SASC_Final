@@ -28,6 +28,6 @@ namespace SASC_Final.Models.Common.DTOs
 
         public string Auditory { get; set; }
 
-        public string SubGroup { get; set; }
+        public int SubGroup { get; set; }
     }
 }
