@@ -11,6 +11,8 @@ namespace SASC_Final.Models
     {
         public int Id { get; set; }
 
+        public string Guid { get; set; }
+
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
@@ -34,8 +36,11 @@ namespace SASC_Final.Models
         public string UrlId { get; set; } = null;
         #endregion
         //public bool isStudent { get; set; }
-        public PhysicalEntity() {
+        public PhysicalEntity() { }
+
+        public PhysicalEntity(string guid) { 
             IsSynced = false;
+            Guid = guid;
         }
         public PhysicalEntity(EmployeeDto ent) 
         {
@@ -47,6 +52,7 @@ namespace SASC_Final.Models
             Degree = ent.Degree;
             Rank = ent.Rank;
             UrlId = ent.UrlId;
+            Guid = ent.CorrelationId.ToString();
             IsSynced = true;
         }
         public PhysicalEntity(StudentDto ent) 
@@ -58,6 +64,7 @@ namespace SASC_Final.Models
             ImageUrl = ent.ImageURL;
             RecordBookNumber = ent.RecordBookNumber;
             Group = ent.GroupNumber;
+            Guid = ent.CorrelationId.ToString();
             IsSynced = true;
         }
 

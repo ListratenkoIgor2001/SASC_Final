@@ -14,10 +14,11 @@ namespace SASC_Final.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {
+        LoginViewModel vm;
         public LoginPage()
         {
             InitializeComponent();
-            var vm = new LoginViewModel();
+            vm = new LoginViewModel();
             vm.DisplayError += () => DisplayAlert("Error", vm.Error, "OK");
             vm.SuccessLogin += async () => await Shell.Current.GoToAsync($"//{nameof(SchedulePage)}");
             this.BindingContext = vm;         
@@ -26,6 +27,12 @@ namespace SASC_Final.Views
         {
             await Shell.Current.GoToAsync($"//{nameof(RegistrationPage)}");
             //Navigation.PushAsync(new RegistrationPage()).Wait();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            //vm.OnAppearing();
         }
     }
 }

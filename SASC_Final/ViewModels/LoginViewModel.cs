@@ -15,6 +15,7 @@ using SASC_Final.ViewModels.Base;
 using SASC_Final.Models.Common.AuthModels.Enums;
 using SASC_Final.Models;
 using System.Diagnostics;
+using SASC_Final.Models.Common.AuthModels;
 
 namespace SASC_Final.ViewModels
 {
@@ -46,15 +47,16 @@ namespace SASC_Final.ViewModels
 
         public LoginViewModel()
         {
-            Username = "t-test1";
-            ///Password = "1100111001";
+            username = "t-test1";
+            password = "1100111001";
             LoginCommand = new Command(OnLoginClicked);
         }
 
         private async void OnLoginClicked(object obj)
         {
+            /*
             var AppData = DependencyService.Get<AppData>();
-            var userx = new PhysicalEntity();
+            var userx = new PhysicalEntity("");
             if (Username == "t-test1")
             {
                 userx.Id = 1;
@@ -67,30 +69,28 @@ namespace SASC_Final.ViewModels
                 AppData.User = userx;
                 AppData.Role = UserRoles.STUDENT;
             }
+            */
             try
             {
-                //var AppData = DependencyService.Get<AppData>();
-                var authService = DependencyService.Get<AuthService>();
-                if (!AppData.SyncWithToken())
+                var AppData = DependencyService.Get<AppData>();
+                var authService = DependencyService.Get<IAuth>();
+
+                var authResult = await authService.Login(new LoginModel
                 {
-                    var authResult = authService.Login(username, password);
-                    if (string.IsNullOrEmpty(authResult.Result))
-                    {
-                        if (AppData.SyncWithToken())
-                        {
-                            SuccessLogin();
-                        }
-                    }
-                    else
-                    {
-                        Error = authResult.Result;
-                        DisplayError();
-                    }
-                }
-                else
+                    Username = username,
+                    Password = password
+                });
+
+                if (string.IsNullOrEmpty(authResult) && AppData.SyncWithToken())
                 {
                     SuccessLogin();
                 }
+                else
+                {
+                    Error = authResult;
+                    DisplayError();
+                }
+
             }
             catch (Exception ex)
             {
@@ -105,11 +105,11 @@ namespace SASC_Final.ViewModels
             }
             /*
             AppData.Role = "Student";
-            AppData.User = new Models.PhysicalEntity();
+            AppData.User = new SASC_Final.Models.PhysicalEntity();
             AppData.User.Id = 970;
 
             AppData.Role = "Employee";
-            AppData.User = new Models.PhysicalEntity();
+            AppData.User = new SASC_Final.Models.PhysicalEntity();
             AppData.User.Id = 1;
             */
             //проверить токен
@@ -123,12 +123,12 @@ namespace SASC_Final.ViewModels
             if (AppData.Role == UserRoles.STUDENT)
             {
                 var res1 = dataService.GetStudent(AppData.User.Id);
-                AppData.User = new Models.PhysicalEntity(res1.Result);
+                AppData.User = new SASC_Final.Models.PhysicalEntity(res1.Result);
             }
             else
             {
                 var res2 = dataService.GetEmployee(AppData.User.Id);
-                AppData.User = new Models.PhysicalEntity(res2.Result);
+                AppData.User = new SASC_Final.Models.PhysicalEntity(res2.Result);
             }
         }
     }

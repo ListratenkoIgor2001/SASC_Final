@@ -12,7 +12,6 @@ namespace SASC_Final.Services
 {
     public interface ISchedule
     {
-        //Task<List<PlannedLessonDto>> LoadSchedule(PhysicalEntity user, string date = null);
         Task<List<PlannedLessonDto>> LoadSchedule(string date = null);
         Task<int> GetCurrentWeek();
     }

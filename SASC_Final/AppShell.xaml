@@ -94,10 +94,11 @@
         await Shell.Current.GoToAsync("//LoginPage");
     <TabBar IsVisible="False" FlyoutItemIsVisible="False">
     </TabBar>
+    <ShellContent Route="MainPage" ContentTemplate="{DataTemplate local:MainPage}" />
     -->
     <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate local:LoginPage}" />
-    <ShellContent Route="RegistrationPage" ContentTemplate="{DataTemplate local:RegistrationPage}" />
     <ShellContent Route="SchedulePage" ContentTemplate="{DataTemplate local:SchedulePage}" />
+    <ShellContent Route="RegistrationPage" ContentTemplate="{DataTemplate local:RegistrationPage}" />
     <ShellContent Route="LessonPage" ContentTemplate="{DataTemplate local:LessonPage}" />
     <ShellContent Route="QRScanerPage" ContentTemplate="{DataTemplate local:QRScanerPage}" />
     <ShellContent Route="QRScannerPage2" ContentTemplate="{DataTemplate local:QRScannerPage2}" />

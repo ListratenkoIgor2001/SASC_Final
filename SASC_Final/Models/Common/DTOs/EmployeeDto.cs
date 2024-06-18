@@ -1,4 +1,6 @@
-﻿namespace SASC_Final.Models.Common.DTOs
+﻿using System;
+
+namespace SASC_Final.Models.Common.DTOs
 {
     public class EmployeeDto : IDtoEntity
     {
@@ -19,6 +21,8 @@
         public string ImageURL { get; set; }
 
         public string AcademicDepartment { get; set; }
+
+        public Guid CorrelationId { get; set; }
 
         public EmployeeDto() { }
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using SASC_Final.Helpers;
+using SASC_Final.Services;
 using SASC_Final.ViewModels;
 using SASC_Final.Views;
 
@@ -14,19 +15,20 @@ namespace SASC_Final
         public AppShell()
         {
             InitializeComponent();
-            //Routing.RegisterRoute(nameof(LessonPage), typeof(LessonPage));
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            Shell.Current.GoToAsync("//LoginPage").Wait();
         }
+
         private async void OnMenuItemClicked(object sender, EventArgs e)
         {
             var AppData = DependencyService.Get<AppData>();
+            var auth = DependencyService.Get<IAuth>();
+            await auth.Logout();
             AppData.Clear();
-            await Shell.Current.GoToAsync("//LoginPage");
+            await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
         }
     }
 }

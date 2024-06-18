@@ -20,13 +20,13 @@ namespace SASC_Final.Models
         public string RecordbookNumber { get; set; }
         public string ImageUrl { get; set; }
         public string Group { get; set; }
-        public string AttendanceTime;
-        public bool IsPresent;
+        public string AttendanceTime { get; set; }
+        public bool IsPresent { get; set; }
 
         public AttendanceStudent() { }
 
         public AttendanceStudent(Student student, int Employee, int PlannedLesson)
-{
+        {
             Id = student.Id;
             EmployeeId = Employee;
             PlannedLessonId = PlannedLesson;

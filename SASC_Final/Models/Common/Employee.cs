@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+
 
 namespace SASC_Final.Models.Common
 {
-    public class Employee
+    public class Employee : IEntity
     {
         public int Id { get; set; }
 
@@ -20,6 +22,8 @@ namespace SASC_Final.Models.Common
 
         public string ImageURL { get; set; }
 
-        public virtual ICollection<Department> AcademicDepartment { get; set; }
+        public virtual ICollection<Department> AcademicDepartments { get; set; }
+
+        public Guid CorrelationId { get; set; }
     }
 }

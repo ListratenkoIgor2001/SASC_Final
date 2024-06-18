@@ -15,6 +15,10 @@ using System.Security.Claims;
 using SASC_Final.ViewModels;
 using SASC_Final.Models.Common.AuthModels.Enums;
 using System.IdentityModel.Tokens.Jwt;
+using System.Threading.Tasks;
+using Microsoft.AppCenter.Crashes;
+using System.Diagnostics;
+using SASC_Final.Services.Interfaces;
 
 namespace SASC_Final
 {
@@ -35,8 +39,8 @@ namespace SASC_Final
             Role = null;
             User = null;
             RestClient = new RestClient(BaseUri);
-            TokenStorage.RemoveToken();
-            SyncWithToken();
+            //TokenStorage.RemoveToken();
+            //SyncWithToken().Wait();
             CurrentLessons = new ItemsStorage<Lesson>();
             CurrentAttendances = new ItemsStorage<AttendanceStudentViewModel>();
             CurrentStudents = new ItemsStorage<StudentInfo>();
@@ -46,6 +50,7 @@ namespace SASC_Final
             User = null;
             Role = null;
             TokenStorage.RemoveToken();
+            DependencyService.Get<ILocalStore<PhysicalEntity>>().DeleteData("User");
             ClearContext();
         }
         public void ClearContext()
@@ -63,48 +68,68 @@ namespace SASC_Final
             var token = TokenStorage.GetTokenAsync().Result;
             if (!string.IsNullOrEmpty(token))
             {
-                if (this.User == null || !this.User.IsSynced)
+                if (!JwtHelper.TokenIsValid(token))
                 {
-                    /*
-                    var handler = new JwtSecurityTokenHandler();
-                    var jwtSecurityToken = handler.ReadJwtToken(token);
-                    var user = new PhysicalEntity();
-                    user.Id = Convert.ToInt32(jwtSecurityToken.PayloadExist("user_id")?.ToString());
-                    this.Role = jwtSecurityToken.Claims.First(c => c.Type == ClaimTypes.Role).Value;
-                    this.User = user;
-                    */
-                    var dataService = DependencyService.Get<IData>();
-                    if (this.Role == UserRoles.STUDENT)
+                    TokenStorage.RemoveToken();
+                    return false;
+                }
+                if (User == null || !User.IsSynced)
+                {
+                    Dictionary<string, string> claims = null;
+                    try
                     {
-                        var res1 = dataService.GetStudent(this.User.Id);
-                        this.User = new Models.PhysicalEntity(res1.Result);
+                        claims = JwtHelper.GetClaims(token);
+                        if (claims == null || claims.Count == 0)
+                        {
+                            TokenStorage.RemoveToken();
+                            return false;
+                        }
+                        User = new PhysicalEntity(claims["CorrelationId"]);
+                        Role = claims[ClaimTypes.Role];
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        var res2 = dataService.GetEmployee(this.User.Id);
-                        this.User = new Models.PhysicalEntity(res2.Result);
+                        Crashes.TrackError(ex);
+                        Debug.WriteLine(ex);
+                    }
+                    var storeService = DependencyService.Get<ILocalStore<PhysicalEntity>>();
+                    var user = storeService.LoadData("User");
+                    if (user == null)
+                    {
+                        var dataService = DependencyService.Get<IData>();
+                        if (Role == UserRoles.STUDENT)
+                        {
+                            var result = dataService.GetStudentByGuid(User.Guid).Result;
+                            if (result != null)
+                            {
+                                User = new PhysicalEntity(result);
+                            }
+                            else
+                            {
+                                TokenStorage.RemoveToken();
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            var result = dataService.GetEmployeeByGuid(User.Guid).Result;
+                            if (result != null)
+                            {
+                                User = new PhysicalEntity(result);
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        storeService.SaveData(User, "User");
+                    }
+                    else 
+                    {
+                        User = user;
                     }
                 }
                 return true;
-                /*
-                //AppData.token = token;
-                var handler = new JwtSecurityTokenHandler();
-                var jwtSecurityToken = handler.ReadJwtToken(token);
-                var user = new PhysicalEntity()
-                {
-                    FirstName = jwtSecurityToken.PayloadExist("FirstName").ToString(),
-                    LastName = jwtSecurityToken.PayloadExist("LastName").ToString(),
-                    MiddleName = jwtSecurityToken.PayloadExist("MiddleName").ToString(),
-                    //isStudent = (bool)jwtSecurityToken.PayloadExist("isStudent"),
-                    RecordBookNumber = jwtSecurityToken.PayloadExist("RecordBookNumber")?.ToString(),
-                    Group = jwtSecurityToken.PayloadExist("Group")?.ToString(),
-                    UrlId = jwtSecurityToken.PayloadExist("UrlId")?.ToString()
-                };
-                Role = jwtSecurityToken.PayloadExist("role").ToString();
-                Role2 = jwtSecurityToken.Claims.First(c => c.Type == ClaimTypes.Role).Value;
-                //user.UrlId = "s-kulikov";
-                User = user;
-                */
             }
             return false;
         }

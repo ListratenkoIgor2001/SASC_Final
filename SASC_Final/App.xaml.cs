@@ -9,6 +9,9 @@ using Xamarin.Forms.Xaml;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using SASC_Final.Services.Interfaces;
+using System.Collections.Generic;
+using SASC_Final.Models;
 
 namespace SASC_Final
 {
@@ -21,13 +24,26 @@ namespace SASC_Final
             DependencyService.Register<AuthService>();
             DependencyService.Register<ScheduleService>();
             DependencyService.Register<DataService>();
-            //DependencyService.Register<IDataStore,ItemsStorage>();
+            DependencyService.Register<ILocalStore<PhysicalEntity>, LocalStore<PhysicalEntity>>();
+            //DependencyService.Register<ILocalStore<Settings>, LocalStore<Settings>>();
             var AppData = new AppData();
             DependencyService.RegisterSingleton(AppData);
-            var x = DependencyService.Get<AppData>();
+            //var x = DependencyService.Get<AppData>();
 
-            DependencyService.Register<MockDataStore>();
+            //DependencyService.Register<MockDataStore>();
             MainPage = new AppShell();
+
+            var sync = AppData.SyncWithToken();
+            if (sync)
+            {
+                MainPage = new AppShell();
+                Shell.Current.GoToAsync($"//{nameof(SchedulePage)}");
+            }
+            else
+            {
+                MainPage = new AppShell();
+                Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+            }
         }
 
         protected override void OnStart()
@@ -37,6 +53,8 @@ namespace SASC_Final
 
         protected override void OnSleep()
         {
+            // await Application.Current.SavePropertiesAsync();
+            Application.Current.SavePropertiesAsync();
         }
 
         protected override void OnResume()

@@ -1,6 +1,9 @@
-﻿namespace SASC_Final.Models.Common
+﻿
+using System;
+
+namespace SASC_Final.Models.Common
 {
-    public class Student
+    public class Student : IEntity
     {
         public int Id { get; set; }
 
@@ -16,6 +19,8 @@
 
         public virtual StudentsGroup StudentsGroup { get; set; }
 
-        public int Subgroup { get; set; }
+		public int Subgroup{ get; set; }
+
+        public Guid CorrelationId { get; set; } = Guid.NewGuid();
     }
 }

@@ -113,12 +113,20 @@ namespace SASC_Final.ViewModels
         {
             var AppData = DependencyService.Get<AppData>();
 
+
             var studs = AppData.CurrentStudents.GetItems();
             var ats = AppData.CurrentAttendances.GetItems();
             var student = ats.Select(x => x).FirstOrDefault(x => x.studentModel.Id == info.Id);
+            Error = JsonConvert.SerializeObject(info) + $"\n present before: {ats.Select(x=>x).Where(x=>x.IsPresent).Count()}";
+
+
             studs.Add(info);
             //_player.Play();
             student.IsPresent = true;
+
+
+            Error += $"\n present after: {ats.Select(x => x).Where(x => x.IsPresent).Count()}";
+            DisplayError();
             return 0;
         }
         private int HandleStudent(StudentInfo info, DateTime now)

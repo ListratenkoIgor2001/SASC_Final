@@ -23,142 +23,14 @@ namespace SASC_Final.Services
 {
     public class AuthService : IAuth
     {
-        private string _baseUri = "http://sacs-auth.somee.com";
-        
-            /*
-        public async Task<string> Login(string username, string password)
-        {
-            //var request = new RestRequest("auth/Account/Login", Method.Post);
-                         //.AddHeader("Content-Type", "application/json;charset=utf-8")
-                         //.AddHeader("Content-Length", 0)
-                         //.AddQueryParameter("username", username).AddQueryParameter("password", password);
-            var request = new RestRequest("Account/Login", Method.Post);
-            request.RequestFormat = DataFormat.Json;
-            //request.AddBody(new LoginModel { Username=username,Password=password});
-            request.AddBody(new LoginModel { Username="g-danilova",Password="Test2Test2"});
-            //request.AddBody(new LoginModel { Username="85100093",Password="Test1Test1"});
-            var AppData = DependencyService.Get<AppData>();
-            //var response = AppData.RestClient.PostAsync(request);
-            var client = new RestClient(_baseUri);
-            var response = client.ExecuteAsync(request);
-            try
-            {
-                response.Wait();
-                if (response.Result.IsSuccessful)
-                {
-                    string token = response.Result.Content;
-                    if (token != null)
-                    {
-                        AppData.token = token;
-                        var handler = new JwtSecurityTokenHandler();
-                        var jwtSecurityToken = handler.ReadJwtToken(token);
-                        var user = new PhysicalEntity()
-                        {
-                            FirstName = jwtSecurityToken.PayloadExist("FirstName").ToString(),
-                            LastName = jwtSecurityToken.PayloadExist("LastName").ToString(),
-                            MiddleName = jwtSecurityToken.PayloadExist("MiddleName").ToString(),
-                            isStudent = (bool)jwtSecurityToken.PayloadExist("isStudent"),
-                            RecordBookNumber = jwtSecurityToken.PayloadExist("RecordBookNumber")?.ToString(),
-                            Group = jwtSecurityToken.PayloadExist("Group")?.ToString(),
-                            UrlId = jwtSecurityToken.PayloadExist("UrlId")?.ToString()
-                        };
-                        AppData.Role = jwtSecurityToken.PayloadExist("role").ToString();
-                        //AppData.Role = jwtSecurityToken.Claims.First(c => c.Type == ClaimTypes.Role).Value ;
-                        AppData.User = user;
-                    }
-                    return string.Empty;
-                }
-                else
-                {
-                    return $"Error {response.Result.StatusCode}. {response.Result.ErrorMessage}\n{response.Result.Content}";
-                }
-            }
-            catch { return $"Error {response.Result.StatusCode}. {response.Result.ErrorMessage}\n{response.Result.Content}"; }
-        }
-        */
-        public async Task<string> Login(string username, string password)
-        {
-            
-            TokenStorage.SetTokenAsync("   ").Wait();
-            return null;
-            //string token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImctZGFuaWxvdmEiLCJuYW1laWQiOiJnLWRhbmlsb3ZhIiwicm9sZSI6IkVtcGxveWVlIiwibmJmIjoxNjYxNzU1ODEwLCJleHAiOjE2NjE3OTE4MTAsImlhdCI6MTY2MTc1NTgxMCwiRmlyc3ROYW1lIjoi0JPQsNC70LjQvdCwIiwiTGFzdE5hbWUiOiLQlNCw0L3QuNC70L7QstCwIiwiTWlkZGxlTmFtZSI6ItCS0LvQsNC00LjQvNC40YDQvtCy0L3QsCIsImlzU3R1ZGVudCI6ZmFsc2UsIlVybElkIjoiZy1kYW5pbG92YSJ9.aXzbmoPon9QY0k1sYZshXz4UzbvTDqug8q6R0mcKGh4";
-            /*
-            var request = new RestRequest("Account/login", Method.Post);
-            request.RequestFormat = DataFormat.Json;
-            request.AddJsonBody(new LoginModel { Username = username, Password = password });
-            var client = new RestClient(_baseUri);
-            var response = client.ExecuteAsync(request);
-            response.Wait();
-                if (response.Result.IsSuccessful)
-                {
-                    //Convert.ToInt32(response.Result.Content);
-                    string token = response.Result.Content;
-                    if (token != null)
-                    {
-                        //AppData.Role = token;
-                        TokenStorage.SetTokenAsync(token).Wait();
-                        var handler = new JwtSecurityTokenHandler();
-                        var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
-                        var user = new PhysicalEntity();
-                        user.Id = Convert.ToInt32(jsonToken.Claims.First(c => c.Type == "user_id").Value);
-                        AppData.Role = jsonToken.Claims.First(c => c.Type == ClaimTypes.Role).Value;
-                        AppData.User = user;
-                      
-                      return string.Empty;
-                    }
-                    return "TokenIsNull";
-                }
-            */
-            var AppData = DependencyService.Get<AppData>();
-            var request = new RestRequest($"Account/login3/{username}/{password}", Method.Get);
-            var client = new RestClient(_baseUri);
-            var response = client.ExecuteAsync(request);
-            try
-            {
-                response.Wait();
-                if (response.Result.IsSuccessful)
-                {
-                    //Convert.ToInt32(response.Result.Content);
-                    string token = response.Result.Content;
-                    if (token != null)
-                    {
-                        //AppData.Role = token;
-                        TokenStorage.SetTokenAsync(token).Wait();
-                        var handler = new JwtSecurityTokenHandler();
-                        var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
-                        var user = new PhysicalEntity();
-                        user.Id = Convert.ToInt32(jsonToken.Claims.First(c => c.Type == "user_id").Value);
-                        AppData.Role = jsonToken.Claims.First(c => c.Type == ClaimTypes.Role).Value;
-                        AppData.User = user;
-                        /*
-                        var handler = new JwtSecurityTokenHandler();
-                        var jwtSecurityToken = handler.ReadJwtToken(token);
-                        var user = new PhysicalEntity();                      
-                        user.Id = Convert.ToInt32(jwtSecurityToken.PayloadExist("user_id")?.ToString());
-                        //AppData.Role = jwtSecurityToken.PayloadExist("role").ToString();
-                        AppData.Role = jwtSecurityToken.Claims.First(c => c.Type == ClaimTypes.Role).Value ;
-                        AppData.User = user;
-                        */
-                        return string.Empty;
-                    }
-                    return "TokenIsNull";
-                }
-                else
-                {
-                    return $"Error {response.Result.StatusCode}. {response.Result.ErrorMessage}\n{response.Result.Content}";
-                }
-            }
-            catch 
-            { 
-                return $"Error {response.Result.StatusCode}. {response.Result.ErrorMessage}\n{response.Result.Content}"; 
-            }
-        }
+        private string _apiTemplate = "auth/";
 
         public async Task<string> Login(LoginModel loginModel)
         {
-            var client = new RestClient(_baseUri);
+            var AppData = DependencyService.Get<AppData>();
+            var client = AppData.RestClient;
             RestResponse response = new RestResponse();
-            var request = new RestRequest($"Account/SignIn", Method.Post);
+            var request = new RestRequest(_apiTemplate + $"Account/SignIn", Method.Post);
             request.AddHeader("Content-Type", "application/json");
             request.AddJsonBody(loginModel);
             try
@@ -169,9 +41,7 @@ namespace SASC_Final.Services
                     var result = JObject.Parse(response.Content);
                     var token = result["token"].ToString();
                     await TokenStorage.SetTokenAsync(token);
-                    var claims = JwtHelper.GetClaims(token);
-
-                    return token;
+                    return null;
                 }
                 else
                 {
@@ -184,35 +54,18 @@ namespace SASC_Final.Services
             }
         }
 
-        public async Task Logout()
-        {
-
-            var client = new RestClient(_baseUri);
-            var token = await TokenStorage.GetTokenAsync();
-            if(!string.IsNullOrEmpty(token))
-            { 
-                var request = new RestRequest("Account/SignOut")
-                //var request = new RestRequest("auth/Account/Logout")
-                    .AddHeader("Authorization", $"Bearer {token}");
-                await client.PostAsync(request);
-            }
-            TokenStorage.RemoveToken();
-            var AppData = DependencyService.Get<AppData>();
-            AppData.Clear();
-        }
-
         public async Task<string> Register(RegistrationModel model)
         {
-            return null;
-            var client = new RestClient(_baseUri);
+            var AppData = DependencyService.Get<AppData>();
+            var client = AppData.RestClient;
             RestResponse response = new RestResponse();
-            var request = new RestRequest($"Account/SignUp", Method.Post);
+            var request = new RestRequest(_apiTemplate + $"Account/SignUp", Method.Post);
             request.AddHeader("Content-Type", "application/json");
             request.AddJsonBody(model);
             try
             {
                 response = await client.ExecuteAsync(request);
-                
+
                 if (response.IsSuccessful)
                 {
                     return null;
@@ -227,5 +80,19 @@ namespace SASC_Final.Services
                 return $"Error {response.StatusCode}. {response.ErrorMessage}\n{response.Content}";
             }
         }
-    }  
+
+        public async Task Logout()
+        {
+            var AppData = DependencyService.Get<AppData>();
+            var client = AppData.RestClient;
+            var token = await TokenStorage.GetTokenAsync();
+            if (!string.IsNullOrEmpty(token))
+            {
+                var request = new RestRequest(_apiTemplate + "Account/SignOut");
+                request.AddHeader("Authorization", $"Bearer {token}");
+                await client.PostAsync(request);
+            }
+        }
+
+    }
 }

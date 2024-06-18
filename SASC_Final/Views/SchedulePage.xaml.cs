@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AppCenter.Crashes;
 
 using SASC_Final.Helpers;
+using SASC_Final.Models.Common.AuthModels.Enums;
 using SASC_Final.ViewModels;
 
 using Xamarin.Forms;
@@ -22,8 +23,8 @@ namespace SASC_Final.Views
         {
             try {
                 //Navigation.ClearStack();
-                InitializeComponent();
                 BindingContext = _viewModel = new ScheduleViewModel();
+                InitializeComponent();
                 _viewModel.DisplayError += () => DisplayAlert("Error", _viewModel.Error, "OK");
                 _viewModel.ScheduleNotFound += () => { labelNotFound.IsVisible = true; ScheduleListView.IsVisible = false; };
                 _viewModel.Refresh += () => { labelNotFound.IsVisible = false; ScheduleListView.IsVisible = true; };
@@ -45,7 +46,7 @@ namespace SASC_Final.Views
         {
             DataTemplate result;
             var AppData = DependencyService.Get<AppData>();
-            if (AppData.Role=="Student")
+            if (AppData.Role== UserRoles.STUDENT)
             {
                 result = new DataTemplate(() =>
                 {

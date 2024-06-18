@@ -1,7 +1,7 @@
 ﻿namespace SASC_Final.Models.Common
 {
-    public class Speciality
-    { 
+    public class Speciality : IEntity
+    {
         public int Id { get; set; }
 
         public string Abbrev { get; set; }

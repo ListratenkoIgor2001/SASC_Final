@@ -2,7 +2,9 @@
 using Newtonsoft.Json;
 using RestSharp;
 
+using SASC_Final.Helpers;
 using SASC_Final.Models.Common;
+using SASC_Final.Models.Common.AuthModels;
 using SASC_Final.Models.Common.DTOs;
 
 using System;
@@ -20,7 +22,8 @@ namespace SASC_Final.Services
             //return true;
             RestRequest request;
             request = new RestRequest($"Attendance/AddList", Method.Post);
-            //request.AddHeader("Authorization", $"Bearer {TokenStorage.GetTokenAsync().Result}");
+            request.AddHeader("Authorization", $"Bearer {await TokenStorage.GetTokenAsync()}");
+            request.AddHeader("Content-Type", "application/json");
             request.AddJsonBody(attendances);
             var client = new RestClient(_baseUri);
             var response = await client.PostAsync(request);
@@ -32,13 +35,13 @@ namespace SASC_Final.Services
             }
             return false;
         }
-        public async Task<bool> SendAttendance(AttendanceDto attendances)
+        public async Task<bool> SendAttendance(AttendanceDto attendance)
         {
             return true;
             RestRequest request;
             request = new RestRequest($"Attendance/AddList", Method.Post);
-            //request.AddHeader("Authorization", $"Bearer {TokenStorage.GetTokenAsync().Result}");
-            request.AddJsonBody(attendances);
+            request.AddHeader("Authorization", $"Bearer {await TokenStorage.GetTokenAsync()}");
+            request.AddJsonBody(attendance);
             var client = new RestClient(_baseUri);
             var response = await client.PostAsync(request);
             if (response.IsSuccessful)

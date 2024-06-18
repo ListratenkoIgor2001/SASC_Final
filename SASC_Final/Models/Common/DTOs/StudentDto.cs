@@ -1,4 +1,6 @@
-﻿namespace SASC_Final.Models.Common.DTOs
+﻿using System;
+
+namespace SASC_Final.Models.Common.DTOs
 {
     public class StudentDto : IDtoEntity
     {
@@ -19,6 +21,8 @@
         public string GroupNumber { get; set; }
 
         public int Subgroup { get; set; }
+
+        public Guid CorrelationId { get; set; }
 
         public StudentDto() { }
     }
