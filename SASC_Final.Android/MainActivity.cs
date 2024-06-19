@@ -15,7 +15,7 @@ using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Android;
 using System.Net.NetworkInformation;
-
+using ZXing.Mobile;
 
 namespace SASC_Final.Droid
 {
@@ -33,8 +33,10 @@ namespace SASC_Final.Droid
             if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage) != Permission.Granted ||
             ContextCompat.CheckSelfPermission(this, Manifest.Permission.ReadExternalStorage) != Permission.Granted)
             {
-                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.WriteExternalStorage, Manifest.Permission.ReadExternalStorage }, RequestStorageId);
+                //ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.WriteExternalStorage, Manifest.Permission.ReadExternalStorage }, RequestStorageId);
             }
+
+            MobileBarcodeScanner.Initialize(Application);
             LoadApplication(new App());
             AppCenter.Start("783e3766-217c-4474-bc0c-21bb6947f049", typeof(Analytics), typeof(Crashes));
 
