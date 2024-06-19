@@ -13,6 +13,7 @@ using SASC_Final.Helpers;
 using SASC_Final.ViewModels.Base;
 using Microsoft.AppCenter.Crashes;
 using SASC_Final.Views;
+using SASC_Final.Models.Common.DTOs;
 
 namespace SASC_Final.ViewModels
 {
@@ -70,7 +71,13 @@ namespace SASC_Final.ViewModels
                     Students.Clear();
                     var _service = DependencyService.Get<IData>();
                     var students = await _service.GetStudentsByPlannedLesson(_selectedItem.LessonId);
-                    var attendanceStudents = students.ToAttendanceStudentsList(AppData.User.Id, _selectedItem.LessonId);
+                    var filteredStudents = students;
+                    var subgroups = _selectedItem.SubgroupNumber;
+                    if (subgroups > 0)
+                    {
+                        filteredStudents = students.Where(x => x.Subgroup == subgroups).ToList();
+                    }
+                    var attendanceStudents = filteredStudents.ToAttendanceStudentsList(AppData.User.Id, _selectedItem.LessonId);
                     foreach (var ats in attendanceStudents)
                     {
                         Students.Add(new AttendanceStudentViewModel(ats));

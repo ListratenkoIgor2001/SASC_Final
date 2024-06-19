@@ -21,7 +21,8 @@ namespace SASC_Final.Views
         ScheduleViewModel _viewModel;
         public SchedulePage()
         {
-            try {
+            try
+            {
                 //Navigation.ClearStack();
                 BindingContext = _viewModel = new ScheduleViewModel();
                 InitializeComponent();
@@ -46,7 +47,7 @@ namespace SASC_Final.Views
         {
             DataTemplate result;
             var AppData = DependencyService.Get<AppData>();
-            if (AppData.Role== UserRoles.STUDENT)
+            if (AppData.Role == UserRoles.STUDENT)
             {
                 result = new DataTemplate(() =>
                 {
@@ -55,6 +56,7 @@ namespace SASC_Final.Views
                     Label labelEnd = new Label();
                     Label labelSubject = new Label { FontAttributes = FontAttributes.Bold }; ;
                     Label labelAuditories = new Label();
+                    Label labelGroups = new Label { HorizontalTextAlignment = TextAlignment.End };
                     Label labelEmployee = new Label { HorizontalTextAlignment = TextAlignment.End };
 
                     labelStart.SetBinding(Label.TextProperty, "Start");
@@ -62,6 +64,12 @@ namespace SASC_Final.Views
                     labelSubject.SetBinding(Label.TextProperty, "Subject");
                     labelAuditories.SetBinding(Label.TextProperty, "Auditory");
                     labelEmployee.SetBinding(Label.TextProperty, "Employee");
+
+                    var multiBinding = new MultiBinding { StringFormat = "{0}{1}" };
+                    multiBinding.Bindings.Add(new Binding("Groups"));
+                    multiBinding.Bindings.Add(new Binding("Subgroup"));
+                    labelGroups.SetBinding(Label.TextProperty, multiBinding);
+
                     Grid grid = new Grid
                     {
                         RowDefinitions =
@@ -81,6 +89,7 @@ namespace SASC_Final.Views
                     grid.Children.Add(labelEnd, 0, 1);
                     grid.Children.Add(labelSubject, 1, 0);
                     grid.Children.Add(labelAuditories, 1, 1);
+                    grid.Children.Add(labelGroups, 2, 0);
                     grid.Children.Add(labelEmployee, 2, 1);
                     stack.Children.Add(grid);
                     stack.Padding = 10;
@@ -96,14 +105,14 @@ namespace SASC_Final.Views
                             var diff = item.GetTimeDifference();
                             if (diff > 0)
                             {
-                                DisplayAlert("","Регистрация начнётся за 5 минут до начала занятия.", "Ок");
+                                DisplayAlert("", "Регистрация начнётся за 5 минут до начала занятия.", "Ок");
                             }
                             else
                             {
-                                DisplayAlert("","Регистрация на данное занятие закончено.", "Ок");
+                                DisplayAlert("", "Регистрация на данное занятие закончено.", "Ок");
                             }
                         }
-                        else 
+                        else
                         {
                             _viewModel.SelectedItem = item;
                         }
@@ -127,7 +136,12 @@ namespace SASC_Final.Views
                     labelEnd.SetBinding(Label.TextProperty, "End");
                     labelSubject.SetBinding(Label.TextProperty, "Subject");
                     labelAuditories.SetBinding(Label.TextProperty, "Auditory");
-                    labelGroups.SetBinding(Label.TextProperty, "Groups");
+                    //labelGroups.SetBinding(Label.TextProperty, "Groups");
+                    var multiBinding = new MultiBinding { StringFormat = "{0}{1}" };
+                    multiBinding.Bindings.Add(new Binding("Groups"));
+                    multiBinding.Bindings.Add(new Binding("Subgroup"));
+                    labelGroups.SetBinding(Label.TextProperty, multiBinding);
+
                     Grid grid = new Grid
                     {
                         RowDefinitions =
@@ -153,7 +167,7 @@ namespace SASC_Final.Views
                         NumberOfTapsRequired = 1
                     };
                     recognizer.Tapped += (s, e) =>
-                    {                     
+                    {
                         var item = _viewModel.Items.FirstOrDefault(x => x.Id == grid.ClassId);
                         var closed = item.IsClosed;
                         //убрать отрицание

@@ -56,7 +56,7 @@ namespace SASC_Final.Models
         public string End { get => endLessonTime.ToShortDateTime(); }
         public string Subject { get => $"{subject} ({lessonTypeAbbrev})"; }
         public int SubgroupNumber { get => numSubgroup; }
-        public string Subgroup { get => numSubgroup == 0 ? "" :numSubgroup.ToString(); }
+        public string Subgroup { get => numSubgroup == 0 ? "" :$" ({numSubgroup})"; }
         public string LessonType { get => $"{lessonTypeAbbrev}"; }
         public string Employee { get => employee.GetLastNameInitiales(); }
         public string Groups { get => studentGroups.GetGroups(); }

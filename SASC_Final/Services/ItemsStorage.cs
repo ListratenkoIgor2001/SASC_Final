@@ -4,50 +4,50 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 
+using SASC_Final.Models;
+using SASC_Final.Services.Interfaces;
+
 using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace SASC_Final.Services
 {
     public class ItemsStorage<T>
     {
-        private string filePath;
-
-        public T CurrentItem{get;set;}
-        public ItemsStorage(List<T> items = null)
-        {
-            //var filePath = Path.Combine(FileSystem.AppDataDirectory, $"{typeof(T).FullName}.json");
-            Items = items ?? (Items = new List<T>());
-        }
+        private LocalStore<List<T>> _storage = new LocalStore<List<T>>();
+        private string _storageKey;
+        public T CurrentItem { get; set; }
         public List<T> Items;
+        public int Count => Items.Count;
+
+        public ItemsStorage(List<T> items = null, string key = "")
+        {
+            _storageKey = key;
+            Items = items ?? (Items = new List<T>());
+            LoadData();
+        }
         public List<T> GetItems()
         {
             return Items ?? (Items = new List<T>());
         }
 
-        public void SetItems(List<T> items) {
+        public void SetItems(List<T> items)
+        {
             Items = new List<T>(items);
+            SaveData();
         }
 
-        private void SaveData()
-        {
-            var jsonData = JsonSerializer.Serialize(Items);
-            File.WriteAllText(filePath, jsonData);
-        }
+        private void SaveData() => _storage.SaveData(Items, _storageKey);
 
         private List<T> LoadData()
         {
-            if (File.Exists(filePath))
-            {
-                var jsonData = File.ReadAllText(filePath);
-                return JsonSerializer.Deserialize<List<T>>(jsonData);
-            }
-            return new List<T>();
+            var result = _storage.LoadData(_storageKey);
+            return result == null ? Items : Items = result;           
         }
-        public int Count => Items.Count;
         public void Clear()
         {
             Items = new List<T>();
-            //SaveData();
+            _storage.DeleteData(_storageKey);
         }
     }
 }
