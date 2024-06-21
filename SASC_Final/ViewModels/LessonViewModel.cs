@@ -31,27 +31,33 @@ namespace SASC_Final.ViewModels
             set
             {
                 _lessonId = value;
-                LoadItemId(value);
+                //LoadItemId(value);
             }
         }
 
-        private Lesson _selectedItem;
-        //public CourseViewModel Students2 { get; }
+        private Lesson _selectedItem = null;
         public ObservableCollection<Grouping<string, AttendanceStudentViewModel>> Groups { get; set; } = new ObservableCollection<Grouping<string, AttendanceStudentViewModel>>();
         public ObservableCollection<AttendanceStudentViewModel> Students { get; }
         public Command LoadItemsCommand { get; }
+        AppData AppData = DependencyService.Get<AppData>();
+
         public LessonViewModel()
         {
             Groups = new ObservableCollection<Grouping<string, AttendanceStudentViewModel>>();
             Students = new ObservableCollection<AttendanceStudentViewModel>();
+            LoadItemsCommand = new Command(async () => await LoadStudents());
+            Title = GetTitle();
+            _selectedItem = AppData.CurrentLessons.CurrentItem;
+            //LoadState();
         }
         public LessonViewModel(int id)
         {
             Groups = new ObservableCollection<Grouping<string, AttendanceStudentViewModel>>();
             Students = new ObservableCollection<AttendanceStudentViewModel>();
-            _lessonId = id;
+            _selectedItem = AppData.CurrentLessons.CurrentItem;
+            //_lessonId = id;
             LoadItemsCommand = new Command(async () => await LoadStudents());
-            LoadItemId(id);
+            //LoadItemId(id);
             Title = GetTitle();
             //ItemTapped = new Command<Item>(OnItemSelected);
         }
@@ -62,12 +68,12 @@ namespace SASC_Final.ViewModels
         public async Task LoadStudents(bool loadFromContext = false) {
 
             IsBusy = true;
-            var AppData = DependencyService.Get<AppData>();
+            //var AppData = DependencyService.Get<AppData>();
             try
             {
-                if (!loadFromContext)
+                if (!loadFromContext || AppData.CurrentAttendances.Count == 0)
                 {
-                    AppData.CurrentStudents.Clear();
+                    AppData.CurrentAttendances.Clear();
                     Students.Clear();
                     var _service = DependencyService.Get<IData>();
                     var students = await _service.GetStudentsByPlannedLesson(_selectedItem.LessonId);
@@ -112,7 +118,7 @@ namespace SASC_Final.ViewModels
         }
         public void LoadItemId(int itemId)
         {
-            var AppData = DependencyService.Get<AppData>();
+            //var AppData = DependencyService.Get<AppData>();
             try
             {
                 _selectedItem = AppData.CurrentLessons.CurrentItem = AppData.CurrentLessons?.Items?.FirstOrDefault(x => x.LessonId == itemId);
@@ -128,20 +134,25 @@ namespace SASC_Final.ViewModels
                     { "count", AppData.CurrentLessons.Items.Count().ToString() }
                 };
                 Crashes.TrackError(ex, properties);
+                GoBack();
             }
         }
         public async void SendAttendances() 
         {
             try
             {
-                var AppData = DependencyService.Get<AppData>();
+                //var AppData = DependencyService.Get<AppData>();
                 var service = DependencyService.Get<IAttendance>();
                 var result = await service.SendAttendances(Students.ToList().GetAttendanceDtoList());
                 if (result)
                 {
                     AppData.CurrentAttendances.Clear();
+                    AppData.CurrentStudents.Clear();
                     _selectedItem.IsClosed = true;
-                    await Shell.Current.GoToAsync($"//{nameof(SchedulePage)}");
+                    AppData.CurrentLessons.CurrentItem = _selectedItem = null;
+
+                    GoBack();
+                    //await Shell.Current.GoToAsync($"//{nameof(SchedulePage)}");
                 }
                 else
                 {
@@ -159,16 +170,27 @@ namespace SASC_Final.ViewModels
         {
             var AppData = DependencyService.Get<AppData>();
             AppData.CurrentAttendances.SetItems(Students.ToList());
-            AppData.SelectedLesson = _selectedItem;
+            AppData.CurrentLessons.CurrentItem = _selectedItem;
+            //AppData.SelectedLesson = _selectedItem;
         }
         public void LoadState() 
         {
             var AppData = DependencyService.Get<AppData>();
-            _selectedItem = AppData.SelectedLesson;
-            LoadStudents(true).Wait();
+            if (_selectedItem == null)
+            {
+                _selectedItem = AppData.CurrentLessons.CurrentItem;
+                //_selectedItem = AppData.SelectedLesson;
+                LoadStudents(false);
+            }
+            else { 
+                LoadStudents(true);
+            }
         }
 
         public Action DisplayError;
+        public Action GoBack;
+        //public Action DisplayError;
+
         public Action Refresh;
         public Action ScheduleNotFound;
 

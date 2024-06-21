@@ -14,27 +14,28 @@ namespace SASC_Final.Services
 {
     public class ItemsStorage<T>
     {
-        private LocalStore<List<T>> _storage = new LocalStore<List<T>>();
+        private LocalStore<List<T>> _storage = null;
         private string _storageKey;
         public T CurrentItem { get; set; }
         public List<T> Items;
         public int Count => Items.Count;
 
-        public ItemsStorage(List<T> items = null, string key = "")
+        public ItemsStorage(List<T> items = null, bool useLocalStorage = false, string key = "")
         {
-            _storageKey = key;
             Items = items ?? (Items = new List<T>());
-            LoadData();
+            if (useLocalStorage)
+            {
+                _storage = new LocalStore<List<T>>(); 
+                _storageKey = key;
+                LoadData();
+            }
         }
-        public List<T> GetItems()
-        {
-            return Items ?? (Items = new List<T>());
-        }
+        public List<T> GetItems() => Items ?? (Items = _storage != null ? LoadData() ?? new List<T>() : new List<T>());
 
         public void SetItems(List<T> items)
         {
             Items = new List<T>(items);
-            SaveData();
+            if (_storage != null) SaveData();
         }
 
         private void SaveData() => _storage.SaveData(Items, _storageKey);
@@ -44,10 +45,11 @@ namespace SASC_Final.Services
             var result = _storage.LoadData(_storageKey);
             return result == null ? Items : Items = result;           
         }
+        
         public void Clear()
         {
             Items = new List<T>();
-            _storage.DeleteData(_storageKey);
+            if (_storage != null) _storage.DeleteData(_storageKey);
         }
     }
 }

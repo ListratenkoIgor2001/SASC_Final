@@ -10,16 +10,12 @@ using SASC_Final.ViewModels.Base;
 
 using System.ComponentModel;
 using Xamarin.Forms;
-
-using System;
 using System.Timers;
-using Xamarin.Forms;
 using ZXing.Net.Mobile.Forms;
 using Newtonsoft.Json.Linq;
-using ZXing.Net.Mobile.Forms;
 using ZXing.Common;
 using Xamarin.Forms.Shapes;
-
+using SASC_Final.Services.Interfaces;
 
 namespace SASC_Final.ViewModels
 {
@@ -28,12 +24,27 @@ namespace SASC_Final.ViewModels
         private string _qrCodeString;
         public bool TimerAlive;
         private int _remainingSeconds;
+        private ICryptografy _cryptografy;
+        private AppData appData;
+
+        public string QRCodeString
+        {
+            get { return _qrCodeString; }
+            set { SetProperty(ref _qrCodeString, value); }
+        }
+
+        public string TimerText
+        {
+            get { return $"{_remainingSeconds} секунд осталось"; }
+        }
 
         public QRGeneratorViewModel()
         {
+            appData = DependencyService.Get<AppData>();
+            _cryptografy = DependencyService.Get<ICryptografy>();
+            GetNewQRCode();
             TimerAlive = true;
             Device.StartTimer(TimeSpan.FromSeconds(1), OnTimerTick);
-            GetNewQRCode();
             _remainingSeconds = 10;
         }
         private bool OnTimerTick()
@@ -47,28 +58,21 @@ namespace SASC_Final.ViewModels
             }
             return TimerAlive;
         }
-        public string QRCodeString
-        {
-            get { return _qrCodeString; }
-            set { SetProperty(ref _qrCodeString, value); }
-        }
-
-        public string TimerText
-        {
-            get { return $"{_remainingSeconds} секунд осталось"; }
-        }
 
         private void GetNewQRCode()
         {
             var info = GetInfo();
-            QRCodeString = info;
+            QRCodeString = _cryptografy.Encode(info);
         }
 
         private string GetInfo()
         {
-            var StudentInfo = new StudentInfo();
+            var StudentInfo = new StudentInfo(appData);
             return JsonConvert.SerializeObject(StudentInfo);
         }
+
+        public Action GoBack;
+
         /*
         private ImageSource qrCodeImage;
         private string qrCodeContent = "Initial Content";

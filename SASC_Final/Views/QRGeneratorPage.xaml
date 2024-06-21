@@ -8,7 +8,7 @@
              xmlns:zx="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
              x:Class="SASC_Final.Views.QRGeneratorPage">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Назад" Clicked="ToolbarItem_Clicked"/>
+        <ToolbarItem Text="Настройки" Clicked="SettingsButton_Clicked" Order="Secondary"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>

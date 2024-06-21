@@ -18,6 +18,7 @@ namespace SASC_Final.Views
         {
             var vm = new RegistrationViewModel();
             vm.DisplayError += () => DisplayAlert("Error", vm.Error, "Оk");
+            vm.GoBack += async () => await Navigation.PopAsync();
             vm.SuccessRegister += () => DisplayAlert("", "Запрос на регистрацию успешно принят", "Оk");
             this.BindingContext = vm;
             InitializeComponent();
@@ -26,10 +27,6 @@ namespace SASC_Final.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            Shell.SetBackButtonBehavior(this, new BackButtonBehavior
-            {
-                Command = new Command(async () => await Shell.Current.GoToAsync(".."))//,IconOverride = "over.jpg"
-            });
         }
 
         private async void ToolbarItem_Clicked(object sender, EventArgs e)

@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using SASC_Final.Models.Common;
 using SASC_Final.Models.Common.IisApi;
 using SASC_Final.Helpers;
-using SASC_Final.Models.Common.DTOs;
 using SASC_Final.Models.Common;
+using SASC_Final.Models.Common.DTOs;
 
 namespace SASC_Final.Models
 {
-    //   https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/listview/customizing-list-appearance
     public class Lesson
     {
         public string Id { get; set; }
+        public bool IsClosedByEmployee => _isClosed;
         private bool _isClosed { get; set; } = false;
         public bool IsClosed
         {
@@ -26,7 +25,7 @@ namespace SASC_Final.Models
             {
                 _isClosed = value;
             }
-        } 
+        }
 
         public int LessonId { get; set; }
         private List<string> auditories { get; set; }
@@ -40,9 +39,6 @@ namespace SASC_Final.Models
         private EmployeeDto employee { get; set; }
         private List<string> studentGroups { get; set; }
 
-        private List<Common.IisApi.Employee> iisEmployees { get; set; }
-        private List<Common.IisApi.Studentgroup> iisStudentGroups { get; set; }
-
         public string Auditory
         {
             get
@@ -55,36 +51,22 @@ namespace SASC_Final.Models
         public string Start { get => startLessonTime.ToShortDateTime(); }
         public string End { get => endLessonTime.ToShortDateTime(); }
         public string Subject { get => $"{subject} ({lessonTypeAbbrev})"; }
-        public int SubgroupNumber { get => numSubgroup; }
-        public string Subgroup { get => numSubgroup == 0 ? "" :$" ({numSubgroup})"; }
         public string LessonType { get => $"{lessonTypeAbbrev}"; }
+        public int SubgroupNumber { get => numSubgroup; }
+        public string Subgroup { get => numSubgroup == 0 ? "" : $" ({numSubgroup})"; }
         public string Employee { get => employee.GetLastNameInitiales(); }
         public string Groups { get => studentGroups.GetGroups(); }
-        public string IisEmployee { get => iisEmployees[0]?.GetLastNameInitiales(); }
-        public string IisGroups { get => iisStudentGroups.GetGroups(); }
-        public List<string> GetIisGroupsList() { return iisStudentGroups.GetGroupsList(); }
-        public Lesson(string Id, DayShedule map)
-        {
-            this.Id = Id;
-            this.LessonId = -1;
-            this.auditories = map.auditories;
-            this.endLessonTime = map.endLessonTime;
-            this.lessonTypeAbbrev = map.lessonTypeAbbrev;
-            this.numSubgroup = map.numSubgroup;
-            this.startLessonTime = map.startLessonTime;
-            this.iisStudentGroups = map.studentGroups;
-            this.subject = map.subject;
-            this.subjectFullName = map.subjectFullName;
-            this.iisEmployees = map.employees;
-        }
+
+        public Lesson() { }
+
         public Lesson(string Id, PlannedLessonDto map)
         {
             this.Id = Id;
             this.LessonId = map.Id;
-            this.auditories = new List<string> { map.Auditory};
+            this.auditories = new List<string> { map.Auditory };
             this.endLessonTime = map.PlannedEndTime;
             this.lessonTypeAbbrev = map.LessonType;
-            this.numSubgroup =  map.SubGroup;
+            this.numSubgroup = map.SubGroup;
             this.startLessonTime = map.PlannedTime;
             this.studentGroups = map.Groups.ToList();
             this.subject = map.Subject.Abbrev;
@@ -103,7 +85,28 @@ namespace SASC_Final.Models
             }
             return int.MinValue;
         }
-        public bool IsClosedByEmployee => _isClosed;
+
+        #region IIS Lesson
+        private List<Common.IisApi.Employee> iisEmployees { get; set; }
+        private List<Common.IisApi.Studentgroup> iisStudentGroups { get; set; }
+        public string IisEmployee { get => iisEmployees == null ? "" : iisEmployees[0]?.GetLastNameInitiales(); }
+        public string IisGroups { get => iisStudentGroups == null ? "" : iisStudentGroups.GetGroups(); }
+        public List<string> GetIisGroupsList() { return iisStudentGroups.GetGroupsList(); }
+        public Lesson(string Id, DayShedule map)
+        {
+            this.Id = Id;
+            this.LessonId = -1;
+            this.auditories = map.auditories;
+            this.endLessonTime = map.endLessonTime;
+            this.lessonTypeAbbrev = map.lessonTypeAbbrev;
+            this.numSubgroup = map.numSubgroup;
+            this.startLessonTime = map.startLessonTime;
+            this.iisStudentGroups = map.studentGroups;
+            this.subject = map.subject;
+            this.subjectFullName = map.subjectFullName;
+            this.iisEmployees = map.employees;
+        }
+        #endregion
         /*
         public Lesson(string Id, PlannedLesson map)
         {

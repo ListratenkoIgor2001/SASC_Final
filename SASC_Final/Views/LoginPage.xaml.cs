@@ -17,16 +17,28 @@ namespace SASC_Final.Views
         LoginViewModel vm;
         public LoginPage()
         {
+            this.ToolbarItems.Clear();
+            foreach (var page in Navigation.NavigationStack.ToList())
+            {
+                Navigation.RemovePage(page);
+            }
+            foreach (var page in Navigation.ModalStack.ToList())
+            {
+                Navigation.RemovePage(page);
+            }
             InitializeComponent();
             vm = new LoginViewModel();
             vm.DisplayError += () => DisplayAlert("Error", vm.Error, "OK");
-            vm.SuccessLogin += async () => await Shell.Current.GoToAsync($"//{nameof(SchedulePage)}");
+            vm.SuccessLogin += async () => {
+                Application.Current.MainPage = new NavigationPage(new SchedulePage());
+                await Navigation.PopToRootAsync();
+            };
             this.BindingContext = vm;         
         }
         private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
-            await Shell.Current.GoToAsync($"//{nameof(RegistrationPage)}");
-            //Navigation.PushAsync(new RegistrationPage()).Wait();
+            //await Shell.Current.GoToAsync($"//{nameof(RegistrationPage)}");
+            await Navigation.PushAsync(new RegistrationPage());
         }
 
         protected override void OnAppearing()

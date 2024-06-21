@@ -84,6 +84,7 @@ namespace SASC_Final.ViewModels
 
         public Action DisplayError;
         public Action SuccessRegister;
+        public Action GoBack;
 
         public RegistrationViewModel()
         {

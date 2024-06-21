@@ -24,25 +24,36 @@ namespace SASC_Final
             DependencyService.Register<AuthService>();
             DependencyService.Register<ScheduleService>();
             DependencyService.Register<DataService>();
+            DependencyService.Register<AttendanceService>();
+            DependencyService.Register<CryptografyService>();
             DependencyService.Register<ILocalStore<PhysicalEntity>, LocalStore<PhysicalEntity>>();
-            //DependencyService.Register<ILocalStore<Settings>, LocalStore<Settings>>();
+            DependencyService.Register<ILocalStore<Settings>, LocalStore<Settings>>();
+            //Application.Current.Properties.Clear();
+            //Application.Current.SavePropertiesAsync();
+            var settings = new Settings();
+            settings.UseFrontCamera = true;
+            new LocalStore<Settings>().SaveData(settings);
+            Application.Current.SavePropertiesAsync();
             var AppData = new AppData();
             DependencyService.RegisterSingleton(AppData);
-            //var x = DependencyService.Get<AppData>();
+            
+            //MainPage = new AppShell();
+            //Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
 
-            //DependencyService.Register<MockDataStore>();
-            MainPage = new AppShell();
-
+    
             var sync = AppData.SyncWithToken();
             if (sync)
             {
-                MainPage = new AppShell();
-                Shell.Current.GoToAsync($"//{nameof(SchedulePage)}");
+                //MainPage = new NavigationPage(new LoginPage());
+                MainPage = new NavigationPage(new SchedulePage());
+                //MainPage = new AppShell();
+                //Shell.Current.GoToAsync($"//{nameof(SchedulePage)}");
             }
             else
             {
-                MainPage = new AppShell();
-                Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+                MainPage = new NavigationPage(new LoginPage());
+                //MainPage = new AppShell();
+                //Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
             }
         }
 
@@ -53,7 +64,6 @@ namespace SASC_Final
 
         protected override void OnSleep()
         {
-            // await Application.Current.SavePropertiesAsync();
             Application.Current.SavePropertiesAsync();
         }
 

@@ -14,18 +14,19 @@ namespace SASC_Final.Models
     {
         public int Id { get; set; }
         public int LessonId { get; set; }
-        public byte[] DeviceHash { get; set; }
+        public string DeviceHash { get; set; }
         public DateTime TimeCrt { get; set; }
         public DateTime TimeNbf { get; set; }
         public DateTime TimeExp { get; set; }
 
-        public StudentInfo() 
+        public StudentInfo(){ }
+
+        public StudentInfo(AppData AppData) 
         {
-            var AppData = DependencyService.Get<AppData>();
             var service = DependencyService.Get<IDeviceInfo>();
             Id = AppData.User.Id;
-            LessonId = AppData.SelectedLesson.LessonId;
-            DeviceHash = service.GetSerialHash();
+            LessonId = AppData.CurrentLessons.CurrentItem.LessonId;
+            DeviceHash = Convert.ToBase64String(service.GetSerialHash());
             TimeCrt = TimeNbf = DateTime.Now;
             TimeExp = TimeCrt.AddDays(5).AddSeconds(10);
         }

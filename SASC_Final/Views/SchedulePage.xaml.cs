@@ -8,6 +8,7 @@ using Microsoft.AppCenter.Crashes;
 
 using SASC_Final.Helpers;
 using SASC_Final.Models.Common.AuthModels.Enums;
+using SASC_Final.Services;
 using SASC_Final.ViewModels;
 
 using Xamarin.Forms;
@@ -29,6 +30,8 @@ namespace SASC_Final.Views
                 _viewModel.DisplayError += () => DisplayAlert("Error", _viewModel.Error, "OK");
                 _viewModel.ScheduleNotFound += () => { labelNotFound.IsVisible = true; ScheduleListView.IsVisible = false; };
                 _viewModel.Refresh += () => { labelNotFound.IsVisible = false; ScheduleListView.IsVisible = true; };
+                _viewModel.GotoLesson += async() => await Navigation.PushModalAsync(new NavigationPage(new LessonPage()));
+                _viewModel.GotoQRGeneration += async() => await Navigation.PushModalAsync(new NavigationPage(new QRGeneratorPage()));
                 ScheduleListView.ItemsSource = _viewModel.Items;
                 ScheduleListView.ItemTemplate = GetDataTemplate();
                 //throw new Exception("MyEx_SchedulePage_SchedulePage");
@@ -41,6 +44,28 @@ namespace SASC_Final.Views
                 };
                 Crashes.TrackError(ex, properties);
             }
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            _viewModel.OnAppearing();
+        }
+
+        private async void SettingsButton_Clicked(object sender, EventArgs e)
+        {
+            //await Navigation.PushModalAsync(new SettingsPage());
+        }
+
+        private async void LogoutButton_Clicked(object sender, EventArgs e)
+        {
+            var AppData = DependencyService.Get<AppData>();
+            var auth = DependencyService.Get<IAuth>();
+            await auth.Logout();
+            AppData.Clear();
+
+            Application.Current.MainPage = new NavigationPage(new LoginPage());
+            await Navigation.PopToRootAsync();
         }
 
         private DataTemplate GetDataTemplate()
@@ -202,11 +227,6 @@ namespace SASC_Final.Views
                 });
             }
             return result;
-        }
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            _viewModel.OnAppearing();
         }
     }
 }

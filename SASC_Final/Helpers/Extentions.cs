@@ -14,7 +14,7 @@ using System.Globalization;
 
 namespace SASC_Final.Helpers
 {
-    public static class Extentions
+    public static partial class Extentions
     {
         public static DateTime? ParseDateTime(this string input)
         {

@@ -6,9 +6,8 @@
              x:Class="SASC_Final.Views.SchedulePage"
              Title="{Binding Title}">
     <ContentPage.ToolbarItems>
-       <!-- <ToolbarItem Text="Unadd" Command="{Binding LoadItemsCommand}" />
-        <ToolbarItem Text="Add" Command="{Binding LoadItemsCommand}" />
-        -->
+        <ToolbarItem Text="Настройки" Clicked="SettingsButton_Clicked" Order="Secondary"/>
+        <ToolbarItem Text="Выход" Clicked="LogoutButton_Clicked" Order="Secondary"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>

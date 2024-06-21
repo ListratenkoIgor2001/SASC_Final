@@ -24,26 +24,37 @@ namespace SASC_Final
 {
     public class AppData
     {
+        #region User Info
         public PhysicalEntity User;
+        public string Role;
+        #endregion
+
+        #region AppData
+        public Settings Settings = new Settings();
         public readonly RestClient RestClient;
         public string BaseUri;
-        public string Role;
-        public int CurrentWeek { get => GetCurrentWeek(); }
+        public string PreviousPage;
+        #endregion
+
+        private int week = -1;
+        public int CurrentWeek { get => week <= 0 ? week = GetCurrentWeek() : week; }
+
         public ItemsStorage<Lesson> CurrentLessons;
-        public Lesson SelectedLesson;
         public ItemsStorage<AttendanceStudentViewModel> CurrentAttendances;
         public ItemsStorage<StudentInfo> CurrentStudents;
         public AppData()
         {
-            BaseUri = "http://sacs-gateway.somee.com";
             Role = null;
             User = null;
+            BaseUri = "http://sacs-gateway.somee.com";
             RestClient = new RestClient(BaseUri);
+            var settings = DependencyService.Get<ILocalStore<Settings>>().LoadData();
+            if (settings != null) { Settings = settings; }
             //TokenStorage.RemoveToken();
-            //SyncWithToken().Wait();
-            CurrentLessons = new ItemsStorage<Lesson>();
-            CurrentAttendances = new ItemsStorage<AttendanceStudentViewModel>();
-            CurrentStudents = new ItemsStorage<StudentInfo>();
+            //Clear(); 
+            CurrentLessons = new ItemsStorage<Lesson>(useLocalStorage: false);
+            CurrentAttendances = new ItemsStorage<AttendanceStudentViewModel>(useLocalStorage: true);
+            CurrentStudents = new ItemsStorage<StudentInfo>(useLocalStorage: true);
         }
         public void Clear()
         {
@@ -52,6 +63,7 @@ namespace SASC_Final
             TokenStorage.RemoveToken();
             DependencyService.Get<ILocalStore<PhysicalEntity>>().DeleteData("User");
             ClearContext();
+            Application.Current.SavePropertiesAsync();
         }
         public void ClearContext()
         {
@@ -148,33 +160,4 @@ namespace SASC_Final
             exp = iat.AddMinutes(5);
         }
     }
-    public static class AppDataTokenExtentions
-    {
-        public static string EncodeToken(this AppData appData)
-        {
-            return EncodeDecrypt(JsonConvert.SerializeObject(new AppDataToken(appData.User))).ToString();
-        }
-        public static AppDataToken DecodeToken(this string token)
-        {
-            return JsonConvert.DeserializeObject<AppDataToken>(EncodeDecrypt(token));
-        }
-        public static string EncodeDecrypt(string str)
-        {
-            ushort secretKey = 0x0088; // Секретный ключ (длина - 16 bit).
-            var ch = str.ToArray(); //преобразуем строку в символы
-            string newStr = "";      //переменная которая будет содержать зашифрованную строку
-            foreach (var c in ch)  //выбираем каждый элемент из массива символов нашей строки
-                newStr += TopSecret(c, secretKey);  //производим шифрование каждого отдельного элемента и сохраняем его в строку
-            return newStr;
-        }
-
-        public static char TopSecret(char character, ushort secretKey)
-        {
-            character = (char)(character ^ secretKey);
-            return character;
-        }
-
-
-    }
-
 }

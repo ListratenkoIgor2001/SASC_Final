@@ -16,6 +16,7 @@ using SASC_Final.Models.Common.AuthModels.Enums;
 using SASC_Final.Models;
 using System.Diagnostics;
 using SASC_Final.Models.Common.AuthModels;
+using SASC_Final.Services.Interfaces;
 
 namespace SASC_Final.ViewModels
 {
@@ -48,6 +49,8 @@ namespace SASC_Final.ViewModels
         public LoginViewModel()
         {
             username = "t-test1";
+            //username = "052100155";
+            //username = "052100141";
             password = "1100111001";
             LoginCommand = new Command(OnLoginClicked);
         }
@@ -74,6 +77,8 @@ namespace SASC_Final.ViewModels
             {
                 var AppData = DependencyService.Get<AppData>();
                 var authService = DependencyService.Get<IAuth>();
+                var storeService = DependencyService.Get<ILocalStore<PhysicalEntity>>();
+                storeService.DeleteData("User");
 
                 var authResult = await authService.Login(new LoginModel
                 {

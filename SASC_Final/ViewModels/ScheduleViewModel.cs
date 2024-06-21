@@ -41,22 +41,36 @@ namespace SASC_Final.ViewModels
         public async Task ExecuteLoadItemsCommand()
         {
             IsBusy = true;
-            var AppData = DependencyService.Get<AppData>();
             try
             {
-                AppData.CurrentLessons.Clear();
-                Items.Clear();
-                var _service = DependencyService.Get<ISchedule>();
-                var itemsResult = await _service.LoadSchedule();
-
-                var week = AppData.CurrentWeek;
-                var items = itemsResult;
-                if (items.Count == 0) ScheduleNotFound();
-                foreach (var item in items)
+                var AppData = DependencyService.Get<AppData>();
+                var lessons = AppData.CurrentLessons.GetItems();
+                if (lessons.Count <= 0)
                 {
-                    //Items.Add(new Lesson(item.Id.ToString(), item));
-                    Items.Add(new Lesson(Guid.NewGuid().ToString(), item));
+                    Items.Clear();
+                    AppData.CurrentLessons.Clear();
+                    var _service = DependencyService.Get<ISchedule>();
+                    var itemsResult = await _service.LoadSchedule();
+
+                    var week = AppData.CurrentWeek;
+                    var items = itemsResult;
+                    if (items.Count == 0) ScheduleNotFound();
+                    else Refresh();
+                    foreach (var item in items)
+                    {
+                        //Items.Add(new Lesson(item.Id.ToString(), item));
+                        Items.Add(new Lesson(Guid.NewGuid().ToString(), item));
+                    }
                 }
+                else 
+                {
+                    Items.Clear();
+                    foreach (var item in lessons)
+                    {
+                        //Items.Add(new Lesson(item.Id.ToString(), item));
+                        Items.Add(item);
+                    }
+                }                    
                 AppData.CurrentLessons.SetItems(Items.ToList());
             }
             catch (Exception ex)
@@ -75,8 +89,8 @@ namespace SASC_Final.ViewModels
         public void OnAppearing()
         {
             //IsBusy = true;
-            ExecuteLoadItemsCommand().Wait();
             SelectedItem = null;
+            ExecuteLoadItemsCommand().Wait();
         }
 
         public Lesson SelectedItem
@@ -98,19 +112,23 @@ namespace SASC_Final.ViewModels
             appData.CurrentLessons.CurrentItem = item;
             if (appData.Role == "Student")
             {
-                appData.SelectedLesson = item;
-                await Shell.Current.GoToAsync($"//{nameof(QRGeneratorPage)}?LessonId={item.Id}");
+                GotoQRGeneration();
+                //await Shell.Current.GoToAsync($"//{nameof(QRGeneratorPage)}?LessonId={item.Id}");
             }
             else if (appData.Role == "Employee")
             {
-                await Shell.Current.GoToAsync($"//{nameof(LessonPage)}?LessonId={item.Id}&LoadFromContext={string.Empty}");
+                GotoLesson();
+                //await Shell.Current.GoToAsync($"//{nameof(LessonPage)}?LessonId={item.Id}&LoadFromContext={string.Empty}");
             }               
         }
 
         public Action DisplayError;
         public Action Refresh;
-        //public Action ItemClicked;
         public Action ScheduleNotFound;
+        public Action GotoLesson;
+        public Action GotoQRGeneration;
+
+
         private string error;
         public string Error
         {

@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:SASC_Final.ViewModels"
              xmlns:model="clr-namespace:SASC_Final.Models"          
-             x:Class="SASC_Final.Views.LessonPage"
-             Title="{Binding Title}">
+             x:Class="SASC_Final.Views.LessonPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Сканировать" Clicked="ScanButton_Clicked"/>
         <ToolbarItem Text="Отправить" Clicked="SendButton_Clicked"/>
+        <ToolbarItem Text="Настройки" Clicked="SettingsButton_Clicked" Order="Secondary"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>

@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="Services\CameraToggleService.cs" />
     <Compile Include="Services\DeviceInfoiOS.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
@@ -149,5 +150,7 @@
       <Name>SASC_Final</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BundleResource Include="Resources\camera_switch.png" />
+  </ItemGroup>
 </Project>

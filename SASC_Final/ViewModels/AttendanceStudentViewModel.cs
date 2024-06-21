@@ -38,7 +38,7 @@ namespace SASC_Final.ViewModels
             set
             {
                 var now = DateTime.Now;
-                RegisteredAt = value ? $"{now.Hour}:{now.Minute}" : null;
+                RegisteredAt = value ? $"{now.ToString("HH:mm")}" : null;
                 SetProperty(ref _isPresent, value);
             }
         }
@@ -50,7 +50,9 @@ namespace SASC_Final.ViewModels
             set { SetProperty(ref _registeredAt, value); }
         }
 
-        public readonly AttendanceStudent studentModel = null;
+        public AttendanceStudent studentModel;
+
+        public AttendanceStudentViewModel() { }
 
         public AttendanceStudentViewModel(AttendanceStudent student)
         {
