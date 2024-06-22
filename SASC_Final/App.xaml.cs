@@ -30,10 +30,11 @@ namespace SASC_Final
             DependencyService.Register<ILocalStore<Settings>, LocalStore<Settings>>();
             //Application.Current.Properties.Clear();
             //Application.Current.SavePropertiesAsync();
-            var settings = new Settings();
-            settings.UseFrontCamera = true;
-            new LocalStore<Settings>().SaveData(settings);
-            Application.Current.SavePropertiesAsync();
+            //var settings = new Settings();
+            //settings.UseFrontCamera = true;
+            //new LocalStore<Settings>().SaveData(settings);
+            //Application.Current.SavePropertiesAsync();
+
             var AppData = new AppData();
             DependencyService.RegisterSingleton(AppData);
             
@@ -41,7 +42,7 @@ namespace SASC_Final
             //Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
 
     
-            var sync = AppData.SyncWithToken();
+            var sync = AppData.FastSyncWithToken();
             if (sync)
             {
                 //MainPage = new NavigationPage(new LoginPage());

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using SASC_Final.ViewModels;
+
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,6 +17,7 @@ namespace SASC_Final.Views
         public SettingsPage()
         {
             InitializeComponent();
+            BindingContext = new SettingsViewModel();
         }
     }
 }

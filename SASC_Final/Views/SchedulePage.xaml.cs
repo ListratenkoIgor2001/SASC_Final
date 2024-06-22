@@ -54,7 +54,7 @@ namespace SASC_Final.Views
 
         private async void SettingsButton_Clicked(object sender, EventArgs e)
         {
-            //await Navigation.PushModalAsync(new SettingsPage());
+            await Navigation.PushModalAsync(new SettingsPage());
         }
 
         private async void LogoutButton_Clicked(object sender, EventArgs e)
@@ -128,7 +128,7 @@ namespace SASC_Final.Views
                         if (!closed)
                         {
                             var diff = item.GetTimeDifference();
-                            if (diff > 0)
+                            if (diff < 0)
                             {
                                 DisplayAlert("", "Регистрация начнётся за 5 минут до начала занятия.", "Ок");
                             }
@@ -205,7 +205,7 @@ namespace SASC_Final.Views
                             else
                             {
                                 var diff = item.GetTimeDifference();
-                                if (diff > 0)
+                                if (diff < 0)
                                 {
                                     DisplayAlert("", "Регистрация начнётся за 5 минут до начала занятия.", "Ок");
                                 }

@@ -48,8 +48,8 @@ namespace SASC_Final.Views
                 Options = new MobileBarcodeScanningOptions
                 {
                     DelayBetweenContinuousScans = 1500,
-                    UseFrontCameraIfAvailable = false,
-                    //UseFrontCameraIfAvailable = _viewModel.UseFrontCamera,
+                    //UseFrontCameraIfAvailable = false,
+                    UseFrontCameraIfAvailable = _viewModel.UseFrontCamera,
                     AutoRotate = true,
                     TryHarder = true,
                     PossibleFormats = new List<ZXing.BarcodeFormat>

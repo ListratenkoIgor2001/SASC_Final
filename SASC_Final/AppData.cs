@@ -75,6 +75,29 @@ namespace SASC_Final
         {
             return DependencyService.Get<ISchedule>().GetCurrentWeek().Result;
         }
+
+        public bool FastSyncWithToken()
+        {
+            try
+            {
+                var token = TokenStorage.GetTokenAsync().Result;
+                if (!string.IsNullOrEmpty(token))
+                {
+                    var claims = JwtHelper.GetClaims(token);
+                    User = new PhysicalEntity(claims["CorrelationId"]);
+                    Role = claims[ClaimTypes.Role];
+                    var storeService = DependencyService.Get<ILocalStore<PhysicalEntity>>();
+                    var user = storeService.LoadData("User");
+                    if (user != null)
+                    {
+                        User = user;
+                        return true;
+                    }
+                }
+            }
+            finally { }
+            return false;
+        }
         public bool SyncWithToken() 
         {
             var token = TokenStorage.GetTokenAsync().Result;
@@ -135,6 +158,7 @@ namespace SASC_Final
                             }
                         }
                         storeService.SaveData(User, "User");
+                        Application.Current.SavePropertiesAsync();
                     }
                     else 
                     {
@@ -145,19 +169,5 @@ namespace SASC_Final
             }
             return false;
         }
-    }
-    public class AppDataToken
-    {
-        PhysicalEntity User;
-        DateTime nbf;
-        DateTime exp;
-        DateTime iat;
-        public AppDataToken(PhysicalEntity entity)
-        {
-            User = entity;
-            iat = DateTime.Now;
-            nbf = iat;
-            exp = iat.AddMinutes(5);
-        }
-    }
+    }    
 }

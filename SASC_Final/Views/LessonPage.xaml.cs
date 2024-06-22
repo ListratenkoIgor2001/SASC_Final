@@ -103,7 +103,7 @@ namespace SASC_Final.Views
 
         private async void SettingsButton_Clicked(object sender, EventArgs e) 
         {
-            //await Navigation.PushModalAsync(new SettingsPage());
+            await Navigation.PushModalAsync(new SettingsPage());
         }
 
 

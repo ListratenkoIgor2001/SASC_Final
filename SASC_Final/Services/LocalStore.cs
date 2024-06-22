@@ -40,8 +40,8 @@ namespace SASC_Final.Services
         {
             var json = JsonConvert.SerializeObject(obj);
             Application.Current.Properties[typeof(T).FullName + key] = json;
-            var newjson = Application.Current.Properties[typeof(T).FullName + key] as string;
-            var result = JsonConvert.DeserializeObject<T>(newjson);
+
+            Application.Current.SavePropertiesAsync();
         }
     }
 }

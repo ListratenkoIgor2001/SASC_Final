@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Xamarin.Forms;
+
+using SASC_Final.Services;
 
 namespace SASC_Final
 {
@@ -9,5 +9,11 @@ namespace SASC_Final
         public bool UseFrontCamera = true;
 
         public Settings() { }
+
+        public void SaveAsync() 
+        {
+            new LocalStore<Settings>().SaveData(this);
+            Application.Current.SavePropertiesAsync();
+        }
     }
 }

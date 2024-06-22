@@ -8,26 +8,10 @@
              xmlns:zx="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
              x:Class="SASC_Final.Views.QRGeneratorPage">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Настройки" Clicked="SettingsButton_Clicked" Order="Secondary"/>
+       
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            <!--
-            <Image x:Name="qrCodeImage"
-               VerticalOptions="CenterAndExpand"
-               HorizontalOptions="Center"
-               WidthRequest="300"
-               HeightRequest="300" />
-            <zxing:ZXingBarcodeImageView 
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand"
-                BarcodeFormat="QR_CODE"
-                BarcodeValue="{Binding QRValue}">
-                <zxing:ZXingBarcodeImageView.BarcodeOptions>
-                    <zxcm:EncodingOptions Width="500" Height="500" />
-                </zxing:ZXingBarcodeImageView.BarcodeOptions>
-            </zxing:ZXingBarcodeImageView>
-            -->
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"/>
             <zxing:ZXingBarcodeImageView x:Name="qrCodeImageView" 
                                          BarcodeValue="{Binding QRCodeString}" 
