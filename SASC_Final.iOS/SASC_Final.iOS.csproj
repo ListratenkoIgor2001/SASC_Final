@@ -153,4 +153,13 @@
   <ItemGroup>
     <BundleResource Include="Resources\camera_switch.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\beep%283%29.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\beep%282%29.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\beep.mp3" />
+  </ItemGroup>
 </Project>

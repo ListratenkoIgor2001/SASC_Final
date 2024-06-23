@@ -18,11 +18,10 @@ namespace SASC_Final.Services
     {
         //private string _baseUri = "http://sacs-data.somee.com";
         private string _apiTemplate = "schedule/";
-
+        private AppData AppData = DependencyService.Get<AppData>();
         public async Task<int> GetCurrentWeek()
         {
             return 2;
-            var AppData = DependencyService.Get<AppData>();
             var client = AppData.RestClient;
             RestRequest request;
             request = new RestRequest(_apiTemplate+$"Schedule/CurrentWeek");
@@ -52,7 +51,6 @@ namespace SASC_Final.Services
         public async Task<List<PlannedLessonDto>> LoadSchedule(string date = null)
         {
             RestRequest request;
-            var AppData = DependencyService.Get<AppData>();
             var client = AppData.RestClient;
 
             if (AppData.Role == "Student")

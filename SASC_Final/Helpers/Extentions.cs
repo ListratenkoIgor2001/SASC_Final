@@ -45,7 +45,7 @@ namespace SASC_Final.Helpers
             if (start.HasValue){
                 
                 TimeSpan difference = now.Subtract(start.Value);
-                return Math.Abs(difference.TotalMinutes) <= 5;
+                return Math.Abs(difference.TotalMinutes) <= 40;
             }
             return false;
         }
@@ -60,12 +60,23 @@ namespace SASC_Final.Helpers
             return string.Empty;
         }
 
+        public static string Capitalize(this string input)
+        {
+            if (string.IsNullOrEmpty(input)||input.Length < 2)
+            {
+                return input;
+            }
+
+            return char.ToUpper(input[0]) + input.Substring(1);
+        }
+
         public static string GetLastNameInitiales(this Employee employee)
         {
             if (employee == null)
                 return (string)null;
             return employee.LastName + " " + employee.FirstName.Substring(0, 1) + "." + employee.MiddleName.Substring(0, 1) + ".";
         }
+
         public static string GetGroups(this List<StudentsGroup> groups)
         {
             var result = new List<string>();

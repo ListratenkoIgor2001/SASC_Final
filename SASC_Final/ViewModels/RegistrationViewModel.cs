@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 using Microsoft.AppCenter.Crashes;
@@ -88,11 +89,11 @@ namespace SASC_Final.ViewModels
 
         public RegistrationViewModel()
         {
-            Role = UserRoles.STUDENT;            
-            RegisterCommand = new Command(OnRegister);
+            Role = UserRoles.STUDENT;
+            RegisterCommand = new Command(async () => await OnRegister());
         }
 
-        private async void OnRegister()
+        private async Task OnRegister()
         {
             try
             {
@@ -110,10 +111,10 @@ namespace SASC_Final.ViewModels
                     MiddleName = MiddleName,
                     RecordBookNumber = RecordBookNumber
                 };
-                var result = service.Register(newUser);
-                if (!string.IsNullOrEmpty(result.Result))
+                var result = await service.Register(newUser);
+                if (!string.IsNullOrEmpty(result))
                 {
-                    Error = result.Result;
+                    Error = result;
                     DisplayError();
                 }
                 else

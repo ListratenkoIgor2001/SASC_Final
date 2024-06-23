@@ -6,11 +6,11 @@
         <ScrollView>
             <StackLayout Padding="10">
                 <Image Source="{Binding ImageUrl}" HeightRequest="200" Aspect="AspectFill"/>
-                <Label Text="First Name:"/>
-                <Entry Text="{Binding FirstName}" IsReadOnly="True"/>
-                <Label Text="Last Name:"/>
+                <Label Text="Фамилия:"/>
                 <Entry Text="{Binding LastName}" IsReadOnly="True"/>
-                <Label Text="Middle Name:"/>
+                <Label Text="Имя:"/>
+                <Entry Text="{Binding FirstName}" IsReadOnly="True"/>
+                <Label Text="Отчество:"/>
                 <Entry Text="{Binding MiddleName}" IsReadOnly="True"/>
 
                 <StackLayout BindableLayout.ItemsSource="{Binding StudentFields}" IsVisible="{Binding IsStudent}">
@@ -36,9 +36,10 @@
                 </StackLayout>
 
                 <StackLayout IsVisible="{Binding IsEmployee}">
-                    <Label Text="Use Front Camera"/>
+                    <Label Text="Фронтальная камера для сканирования"/>
                     <Switch IsToggled="{Binding UseFrontCamera}"/>
                 </StackLayout>
+                <Button x:Name="LogOutButton" Text="Выйти" Clicked="LogoutButton_Clicked"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

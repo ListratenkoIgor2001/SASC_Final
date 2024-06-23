@@ -54,7 +54,7 @@ namespace SASC_Final
             //Clear(); 
             CurrentLessons = new ItemsStorage<Lesson>(useLocalStorage: false);
             CurrentAttendances = new ItemsStorage<AttendanceStudentViewModel>(useLocalStorage: true);
-            CurrentStudents = new ItemsStorage<StudentInfo>(useLocalStorage: true);
+            CurrentStudents = new ItemsStorage<StudentInfo>(useLocalStorage:false);
         }
         public void Clear()
         {

@@ -2,12 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:SASC_Final.ViewModels"  
-             xmlns:helper="clr-namespace:SASC_Final.Helpers"  
-             
+             xmlns:helper="clr-namespace:SASC_Final.Helpers"               
              x:Class="SASC_Final.Views.RegistrationPage">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Назад" Clicked="ToolbarItem_Clicked"/>
-    </ContentPage.ToolbarItems>
     <ContentPage.Resources>
         <ResourceDictionary>
             <helper:AllFieldsFilledConverter x:Key="AllFieldsFilledConverter" />
@@ -17,28 +13,28 @@
         <StackLayout Padding="10">
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"/>
 
+            <Label Text="Имя пользователя" />
+            <Entry Text="{Binding Username}" />
+
+            <Label Text="Пароль" />
+            <Entry Text="{Binding Password}" IsPassword="True" />
+
             <Label Text="Email" />
             <Entry Text="{Binding Email}" />
 
-            <Label Text="Username" />
-            <Entry Text="{Binding Username}" />
-
-            <Label Text="Password" />
-            <Entry Text="{Binding Password}" IsPassword="True" />
-
-            <Label Text="First Name" />
-            <Entry Text="{Binding FirstName}" />
-
-            <Label Text="Last Name" />
+            <Label Text="Фамилия" />
             <Entry Text="{Binding LastName}" />
 
-            <Label Text="Middle Name" />
+            <Label Text="Имя" />
+            <Entry Text="{Binding FirstName}" />
+
+            <Label Text="Отчество" />
             <Entry Text="{Binding MiddleName}" />
 
-            <Label Text="Record Book Number" />
+            <Label Text="Номер зачётной книжки" />
             <Entry Text="{Binding RecordBookNumber}" />
 
-            <Button Text="Register" Command="{Binding RegisterCommand}">
+            <Button Text="Зарегистрироваться" Command="{Binding RegisterCommand}">
                 <Button.IsEnabled>
                     <MultiBinding Converter="{StaticResource AllFieldsFilledConverter}">
                         <Binding Path="Email" />
@@ -50,9 +46,7 @@
                         <Binding Path="RecordBookNumber" />
                     </MultiBinding>
                 </Button.IsEnabled>
-            </Button>       
-
-          
+            </Button>    
         </StackLayout>
     </ScrollView>
 </ContentPage>

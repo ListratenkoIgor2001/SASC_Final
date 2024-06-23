@@ -15,16 +15,16 @@
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"/>
             <zxing:ZXingBarcodeImageView x:Name="qrCodeImageView" 
                                          BarcodeValue="{Binding QRCodeString}" 
-                                         HeightRequest="300" 
-                                         WidthRequest="300" 
-                                         HorizontalOptions="Center"
-                                         VerticalOptions="Center"
+                                         HeightRequest="350" 
+                                         WidthRequest="350" 
+                                         HorizontalOptions="CenterAndExpand"
+                                         VerticalOptions="CenterAndExpand"
                                          >
                 <zx:ZXingBarcodeImageView.BarcodeOptions>
                     <zxcm:EncodingOptions Width="300" Height="300" />
                 </zx:ZXingBarcodeImageView.BarcodeOptions>
             </zxing:ZXingBarcodeImageView>
-            <Label Padding="3" Margin="3" HorizontalOptions="CenterAndExpand" x:Name="timerLabel" Text="{Binding TimerText}" />
+            <Label Padding="3" Margin="3" VerticalOptions="CenterAndExpand" HorizontalOptions="Center" x:Name="timerLabel" Text="{Binding TimerText}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

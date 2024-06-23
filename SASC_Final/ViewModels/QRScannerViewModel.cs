@@ -19,6 +19,7 @@ using System.Numerics;
 using System.Reflection;
 using ZXing.Mobile;
 using SASC_Final.Services.Interfaces;
+using System.Threading.Tasks;
 
 namespace SASC_Final.ViewModels
 {
@@ -51,25 +52,23 @@ namespace SASC_Final.ViewModels
             UseFrontCamera = appData.Settings.UseFrontCamera;
             _player = CrossSimpleAudioPlayer.Current;
             LoadSound("beep.mp3");
-            //ScanningOptions = GetScanningOptions();
             StartScanningCommand = new Command<ZXingScannerView>(ExecuteStartScanningCommand);
         }
 
-        
-        
+
+
+        private void PlaySound(string fileName)
+        {
+            _player.Load(fileName);
+            _player.Play();
+        }
         private void LoadSound(string fileName)
         {
-            //var assembly = typeof(App).GetTypeInfo().Assembly;
-            //Stream audioStream = assembly.GetManifestResourceStream("SASC_Final." + fileName);
-            //_player.Load(audioStream);
-            _player = Plugin.SimpleAudioPlayer.CrossSimpleAudioPlayer.Current;
             _player.Load(fileName);
         }
 
-        // Handle the scan result event
         public void OnScanResult(Result result)
         {
-            // Handle your scan result here
             isScanning = false;
             Device.BeginInvokeOnMainThread(async () =>
             {
@@ -81,7 +80,7 @@ namespace SASC_Final.ViewModels
                     Error = result.Text;
                     //DisplayError();
                     var x = JsonConvert.DeserializeObject<StudentInfo>(resultString);
-                    _player.Play();
+                    //_player.Play();
                     //var handletrueResult = HandleStudentTrue(x,now);
                     var handleResult = HandleStudent(x, now);
 
@@ -89,6 +88,7 @@ namespace SASC_Final.ViewModels
                 catch (JsonException ex)
                 {
                     Crashes.TrackError(ex);
+                    PlaySound("beep(2).mp3");
                     Error = "Ошибка. QR-код не содержит данных студента либо повреждён.";
                 }
                 catch (Exception ex)
@@ -113,7 +113,8 @@ namespace SASC_Final.ViewModels
                 if (device.Id == info.Id) return 0;
                 //beep bepp bepp
                 //устройство уже было зарегистрированно
-                _player.Play(); _player.Play(); _player.Play();
+
+                PlaySound("beep(3).mp3");
                 Error = "Данное устройство уже было зарегистрированно.";
                 DisplayError();
                 return 1;
@@ -122,7 +123,7 @@ namespace SASC_Final.ViewModels
             {
                 //beep beep
                 //QR код для другого занятия
-                _player.Play(); _player.Play(); _player.Play();
+                PlaySound("beep(2).mp3");
                 Error = "QR код для другого занятия.";
                 DisplayError();
                 return 2;
@@ -133,20 +134,22 @@ namespace SASC_Final.ViewModels
             {
                 //beep beep
                 //студент не найден в списке посещения
-                _player.Play(); _player.Play(); _player.Play();
+
+                PlaySound("beep(3).mp3");
                 Error = "Cтудент не найден в списке посещения.";
                 DisplayError();
                 return 3;
             }
             if (info.TimeExp < now)
             {
-                _player.Play(); _player.Play();
+                PlaySound("beep(3).mp3");
                 Error = "Срок действия QR-кода истёк.";
                 DisplayError();
                 return 4;
             }
             studs.Add(info);
-            _player.Play();
+
+            PlaySound("beep.mp3");
             student.IsPresent = true;
             return 0;
         }

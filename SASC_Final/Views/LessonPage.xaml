@@ -11,7 +11,7 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"/>
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand"/>
             <ListView x:Name="GroupsList" IsGroupingEnabled="True" ItemsSource="{Binding Groups}">
                 <ListView.GroupHeaderTemplate>
                     <DataTemplate>
@@ -33,7 +33,7 @@
                                     <ColumnDefinition Width="0.2*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Image HeightRequest="200" Source="{Binding ImageUrl}" Grid.Column="0" Margin="1"/>
+                                <Image HeightRequest="300" Source="{Binding ImageUrl}" Grid.Column="0" Margin="1"/>
                                 <Label VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" Text="{Binding Fio}" Grid.Column="1" Margin="1"/>
                                 <Label WidthRequest="100" VerticalOptions="CenterAndExpand" HorizontalOptions="End" Text="{Binding RegisteredAt}" Grid.Column="2" Margin="1"/>
                                 <Switch WidthRequest="50" HorizontalOptions="End" IsToggled="{Binding IsPresent}" Grid.Column="3" Margin="1"/>
@@ -44,65 +44,5 @@
             </ListView>
             <Label x:Name="labelNotFound" VerticalOptions="Start" HorizontalOptions="CenterAndExpand" Text=""/>
         </StackLayout>
-    </ContentPage.Content>
-    <!--
-    <ContentPage.Content>
-        <StackLayout>
-            <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                <Button Text="Сканировать" Clicked="ScanButton_Clicked" />
-                <Button Text="Отправить" Clicked="SendButton_Clicked" />
-            </StackLayout>
-            <ScrollView>
-                <StackLayout x:Name="MainLayout">
-                    
-                </StackLayout>
-            </ScrollView>
-
-        </StackLayout>
-    </ContentPage.Content>
-    -->
-    <!--
-    <ContentPage.Content>
-        <ListView x:Name="LessonListView" BindingContext="local:LessonViewModel">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Padding="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.RowSpan="3" 
-                               Source="{Binding ImageUrl}" 
-                               Aspect="AspectFill"
-                               HeightRequest="120" 
-                               WidthRequest="100" />
-                        <Label Grid.Column="1" Grid.Row="1" 
-                               Text="{Binding AttendanceTime}" 
-                               FontAttributes="Bold" />
-                        <Label Grid.Row="0"
-                               Grid.Column="2" 
-                               Text="{Binding LasName}" 
-                               VerticalOptions="Center" />
-                        <Label Grid.Row="1"
-                               Grid.Column="2" 
-                               Text="{Binding LasName}" 
-                               VerticalOptions="Center" />
-                        <Label Grid.Row="1"
-                               Grid.Column="3" 
-                               Text="{Binding MiddleName}" 
-                               VerticalOptions="Center" />
-                        <Switch Grid.Column="3" Grid.Row="1" IsToggled="{Binding IsPresent}"/>
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </ContentPage.Content>
-    -->
+    </ContentPage.Content>    
 </ContentPage>

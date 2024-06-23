@@ -12,6 +12,7 @@ using Microsoft.AppCenter.Crashes;
 using SASC_Final.Services.Interfaces;
 using System.Collections.Generic;
 using SASC_Final.Models;
+using System.Threading.Tasks;
 
 namespace SASC_Final
 {
@@ -21,6 +22,28 @@ namespace SASC_Final
         public App()
         {
             InitializeComponent();
+            MainPage = new LoadingPage();
+            LoadApplicationDataAsync();
+        }
+
+        private async void LoadApplicationDataAsync()
+        {
+            var sync = await Task.Run(() => Initialize());
+            if (sync)
+            {
+                //MainPage = new NavigationPage(new LoginPage());
+                MainPage = new NavigationPage(new SchedulePage());
+                //MainPage = new AppShell();
+                //Shell.Current.GoToAsync($"//{nameof(SchedulePage)}");
+            }
+            else
+            {
+                MainPage = new NavigationPage(new LoginPage());
+            }
+        }
+
+        private bool Initialize()
+        {
             DependencyService.Register<AuthService>();
             DependencyService.Register<ScheduleService>();
             DependencyService.Register<DataService>();
@@ -37,25 +60,11 @@ namespace SASC_Final
 
             var AppData = new AppData();
             DependencyService.RegisterSingleton(AppData);
-            
+
             //MainPage = new AppShell();
             //Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
-
-    
-            var sync = AppData.FastSyncWithToken();
-            if (sync)
-            {
-                //MainPage = new NavigationPage(new LoginPage());
-                MainPage = new NavigationPage(new SchedulePage());
-                //MainPage = new AppShell();
-                //Shell.Current.GoToAsync($"//{nameof(SchedulePage)}");
-            }
-            else
-            {
-                MainPage = new NavigationPage(new LoginPage());
-                //MainPage = new AppShell();
-                //Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
-            }
+            // Simulate a long-running task
+            return AppData.FastSyncWithToken();            
         }
 
         protected override void OnStart()

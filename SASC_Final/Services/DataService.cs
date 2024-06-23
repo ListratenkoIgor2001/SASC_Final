@@ -16,11 +16,11 @@ namespace SASC_Final.Services
     public class DataService : IData
     {
         private string _apiTemplate = "data/";
+        private AppData AppData = DependencyService.Get<AppData>();
 
         public async Task<EmployeeDto> GetEmployee(int id)
         {
             RestRequest request;
-            var AppData = DependencyService.Get<AppData>();
             var client = AppData.RestClient;
             request = new RestRequest(_apiTemplate + $"Employees/id/{id}");
             request.AddHeader("Authorization", $"Bearer {await TokenStorage.GetTokenAsync()}");
@@ -36,7 +36,6 @@ namespace SASC_Final.Services
         public async Task<StudentDto> GetStudent(int id)
         {
             RestRequest request;
-            var AppData = DependencyService.Get<AppData>();
             var client = AppData.RestClient;
             request = new RestRequest(_apiTemplate + $"Students/id/{id}");
             request.AddHeader("Authorization", $"Bearer {await TokenStorage.GetTokenAsync()}");
@@ -53,7 +52,6 @@ namespace SASC_Final.Services
         public async Task<StudentDto> GetStudentByGuid(string id)
         {
             RestRequest request;
-            var AppData = DependencyService.Get<AppData>();
             var client = AppData.RestClient;
             request = new RestRequest(_apiTemplate + $"Students/Guid/{id}");
             request.AddHeader("Authorization", $"Bearer {await TokenStorage.GetTokenAsync()}");
@@ -70,7 +68,6 @@ namespace SASC_Final.Services
         public async Task<EmployeeDto> GetEmployeeByGuid(string id)
         {
             RestRequest request;
-            var AppData = DependencyService.Get<AppData>();
             var client = AppData.RestClient;
             request = new RestRequest(_apiTemplate + $"Employees/Guid/{id}");
             request.AddHeader("Authorization", $"Bearer {await TokenStorage.GetTokenAsync()}");
@@ -88,7 +85,6 @@ namespace SASC_Final.Services
         public async Task<List<StudentDto>> GetStudentsByPlannedLesson(int id)
         {
             RestRequest request;
-            var AppData = DependencyService.Get<AppData>();
             var client = AppData.RestClient;
             request = new RestRequest(_apiTemplate + $"Students/PlannedLesson/{id}");
             request.AddHeader("Authorization", $"Bearer {await TokenStorage.GetTokenAsync()}");

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using AVFoundation;
+
 using Foundation;
 using UIKit;
 using Xamarin.Essentials;
@@ -26,8 +28,16 @@ namespace SASC_Final.iOS
             global::Xamarin.Forms.Forms.Init();
             ZXing.Net.Mobile.Forms.iOS.Platform.Init();
             LoadApplication(new App());
-
+            EnableBackgroundAudio();
             return base.FinishedLaunching(app, options);
+        }
+
+        private void EnableBackgroundAudio()
+        {
+            var currentSession = AVAudioSession.SharedInstance();
+            currentSession.SetCategory(AVAudioSessionCategory.Playback,
+            AVAudioSessionCategoryOptions.MixWithOthers);
+            currentSession.SetActive(true);
         }
     }
 }

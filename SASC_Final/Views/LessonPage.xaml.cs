@@ -56,6 +56,7 @@ namespace SASC_Final.Views
                     //BindingContext = _viewModel = new LessonViewModel(lesson.LessonId);
                     BindingContext = _viewModel = new LessonViewModel();
                     _viewModel.DisplayError += () => DisplayAlert("Error", _viewModel.Error, "OK");
+                    _viewModel.SuccessSend += () => DisplayAlert("", "Статистика посещений успешно отправлена", "OK");
                     _viewModel.GoBack += async() => await Navigation.PopModalAsync();
 
                     _viewModel.ScheduleNotFound += () => { labelNotFound.IsVisible = true; GroupsList.IsVisible = false; };
@@ -65,13 +66,11 @@ namespace SASC_Final.Views
                 }
                 else {
                     await DisplayAlert("Error", "Внутренняя ошибка. Урок не найден. ", "OK");
-                    await Shell.Current.GoToAsync("..");
                 }
             }
             else
             {
                 await DisplayAlert("Error", "Внутренняя ошибка. Урок не найден. ", "OK");
-                await Shell.Current.GoToAsync("..");
             }
         }
         LessonViewModel _viewModel;
@@ -79,25 +78,14 @@ namespace SASC_Final.Views
         {
             InitializeComponent();
             LoadLessonDetails(DependencyService.Get<AppData>().CurrentLessons.CurrentItem.Id);
-
-            //_viewModel = new LessonViewModel();
-            //_viewModel.DisplayError += () => DisplayAlert("Error", _viewModel.Error, "OK");
-            //_viewModel.GoBack += async () => await Navigation.PopModalAsync();            
-            //_viewModel.ScheduleNotFound += () => { labelNotFound.IsVisible = true; GroupsList.IsVisible = false; };
-            //
-            ////_viewModel.LoadStudents(!string.IsNullOrEmpty(LoadFromContext));
-            //this.GroupsList.ItemsSource = _viewModel.Groups;
-            //this.BindingContext = _viewModel;
         }
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            //_viewModel.LoadState();
         }
 
         protected override void OnDisappearing()
         {
-            //_viewModel.SaveState();
             base.OnDisappearing();
         }
 

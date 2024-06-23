@@ -2,10 +2,17 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"             
+             xmlns:vm="clr-namespace:SASC_Final.ViewModels"  
+             xmlns:helper="clr-namespace:SASC_Final.Helpers"     
              mc:Ignorable="d"
              x:Class="SASC_Final.Views.LoginPage"
              Shell.NavBarIsVisible="False">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <helper:AllFieldsFilledConverter x:Key="AllFieldsFilledConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout Padding="10,0,10,0" VerticalOptions="Center">
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"/>
@@ -20,7 +27,14 @@
                            TextColor="White"/>
                 </StackLayout>
             </Frame>
-            <Button VerticalOptions="Center" Text="Login" Command="{Binding LoginCommand}"/>
+            <Button VerticalOptions="Center" Text="Войти" Command="{Binding LoginCommand}">
+                <Button.IsEnabled>
+                    <MultiBinding Converter="{StaticResource AllFieldsFilledConverter}">
+                        <Binding Path="Username" />
+                        <Binding Path="Password" />
+                    </MultiBinding>
+                </Button.IsEnabled>
+            </Button>
             <Label Text="Зарегистрироваться" 
                        FontSize="Small" 
                        TextColor="Gray" 
@@ -30,7 +44,6 @@
                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" NumberOfTapsRequired="1" />
                 </Label.GestureRecognizers>
             </Label>
-            <ActivityIndicator IsRunning="{Binding IsBusy}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

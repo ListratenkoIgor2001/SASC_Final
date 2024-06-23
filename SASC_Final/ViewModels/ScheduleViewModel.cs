@@ -17,6 +17,7 @@ using System.Linq;
 using SASC_Final.Views;
 using Microsoft.AppCenter.Crashes;
 using System.Globalization;
+using SASC_Final.Helpers;
 
 namespace SASC_Final.ViewModels
 {
@@ -31,14 +32,14 @@ namespace SASC_Final.ViewModels
         {
             Title = GetTitle();
             Items = new ObservableCollection<Lesson>();
-            LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
+            LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand(true));
             ItemTapped = new Command<Lesson>(OnItemSelected);           
         }
         private string GetTitle()
         {
-            return $"{new CultureInfo("ru-RU").DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek)} {DateTime.Today.ToString("dd.MM.yyyy")}";
+            return $"{new CultureInfo("ru-RU").DateTimeFormat.GetDayName(DateTime.Today.DayOfWeek).Capitalize()} {DateTime.Today.ToString("dd.MM.yyyy")}";
         }
-        public async Task ExecuteLoadItemsCommand()
+        public async Task ExecuteLoadItemsCommand(bool forced = false)
         {
             IsBusy = true;
             try

@@ -77,12 +77,13 @@ namespace SASC_Final.ViewModels
                     Students.Clear();
                     var _service = DependencyService.Get<IData>();
                     var students = await _service.GetStudentsByPlannedLesson(_selectedItem.LessonId);
-                    var filteredStudents = students;
+                    var filteredStudents = students.OrderBy(x=>x.LastName).ThenBy(x=>x.FirstName).ToList();
                     var subgroups = _selectedItem.SubgroupNumber;
                     if (subgroups > 0)
                     {
                         filteredStudents = students.Where(x => x.Subgroup == subgroups).ToList();
                     }
+
                     var attendanceStudents = filteredStudents.ToAttendanceStudentsList(AppData.User.Id, _selectedItem.LessonId);
                     foreach (var ats in attendanceStudents)
                     {
@@ -101,7 +102,11 @@ namespace SASC_Final.ViewModels
                         Students.Add(ats);
                     }                    
                 }
-                var groups = Students.OrderBy(x => x.studentModel.Group).GroupBy(x => x.studentModel.Group).Select(g => new Grouping<string, AttendanceStudentViewModel>(g.Key, g)).ToList();
+                var groups = Students
+                    .OrderBy(x => x.studentModel.Group)
+                    .GroupBy(x => x.studentModel.Group)
+                    .Select(g => new Grouping<string, AttendanceStudentViewModel>(g.Key, g))
+                    .ToList();
                 Groups = new ObservableCollection<Grouping<string, AttendanceStudentViewModel>>(groups);
             }
             catch (Exception ex)
@@ -121,6 +126,7 @@ namespace SASC_Final.ViewModels
             //var AppData = DependencyService.Get<AppData>();
             try
             {
+                IsBusy = true;
                 _selectedItem = AppData.CurrentLessons.CurrentItem = AppData.CurrentLessons?.Items?.FirstOrDefault(x => x.LessonId == itemId);
                 if (_selectedItem == null)
                 {
@@ -136,11 +142,16 @@ namespace SASC_Final.ViewModels
                 Crashes.TrackError(ex, properties);
                 GoBack();
             }
+            finally
+            {
+                IsBusy = false;
+            }
         }
         public async void SendAttendances() 
         {
             try
             {
+                IsBusy = true;
                 //var AppData = DependencyService.Get<AppData>();
                 var service = DependencyService.Get<IAttendance>();
                 var result = await service.SendAttendances(Students.ToList().GetAttendanceDtoList());
@@ -150,19 +161,22 @@ namespace SASC_Final.ViewModels
                     AppData.CurrentStudents.Clear();
                     _selectedItem.IsClosed = true;
                     AppData.CurrentLessons.CurrentItem = _selectedItem = null;
-
+                    SuccessSend();
                     GoBack();
-                    //await Shell.Current.GoToAsync($"//{nameof(SchedulePage)}");
                 }
                 else
                 {
                     throw new Exception("При отправке данных произошла ошибка. Проверьте подключение и попробуйте снова");
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Error = ex.Message;
                 DisplayError();
+            }
+            finally 
+            {
+                IsBusy = false;
             }
         }
 
@@ -188,6 +202,7 @@ namespace SASC_Final.ViewModels
         }
 
         public Action DisplayError;
+        public Action SuccessSend;
         public Action GoBack;
         //public Action DisplayError;
 

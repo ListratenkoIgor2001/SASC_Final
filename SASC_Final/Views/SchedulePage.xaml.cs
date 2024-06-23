@@ -25,15 +25,15 @@ namespace SASC_Final.Views
             try
             {
                 //Navigation.ClearStack();
-                BindingContext = _viewModel = new ScheduleViewModel();
                 InitializeComponent();
+                ScheduleListView.ItemTemplate = GetDataTemplate();
+                BindingContext = _viewModel = new ScheduleViewModel();
                 _viewModel.DisplayError += () => DisplayAlert("Error", _viewModel.Error, "OK");
                 _viewModel.ScheduleNotFound += () => { labelNotFound.IsVisible = true; ScheduleListView.IsVisible = false; };
                 _viewModel.Refresh += () => { labelNotFound.IsVisible = false; ScheduleListView.IsVisible = true; };
                 _viewModel.GotoLesson += async() => await Navigation.PushModalAsync(new NavigationPage(new LessonPage()));
                 _viewModel.GotoQRGeneration += async() => await Navigation.PushModalAsync(new NavigationPage(new QRGeneratorPage()));
                 ScheduleListView.ItemsSource = _viewModel.Items;
-                ScheduleListView.ItemTemplate = GetDataTemplate();
                 //throw new Exception("MyEx_SchedulePage_SchedulePage");
             }
             catch (Exception ex)
@@ -55,17 +55,6 @@ namespace SASC_Final.Views
         private async void SettingsButton_Clicked(object sender, EventArgs e)
         {
             await Navigation.PushModalAsync(new SettingsPage());
-        }
-
-        private async void LogoutButton_Clicked(object sender, EventArgs e)
-        {
-            var AppData = DependencyService.Get<AppData>();
-            var auth = DependencyService.Get<IAuth>();
-            await auth.Logout();
-            AppData.Clear();
-
-            Application.Current.MainPage = new NavigationPage(new LoginPage());
-            await Navigation.PopToRootAsync();
         }
 
         private DataTemplate GetDataTemplate()
@@ -125,7 +114,7 @@ namespace SASC_Final.Views
                         var item = _viewModel.Items.FirstOrDefault(x => x.Id == grid.ClassId);
                         var closed = item.IsClosed;
                         //убрать отрицание
-                        if (!closed)
+                        if (closed)
                         {
                             var diff = item.GetTimeDifference();
                             if (diff < 0)
@@ -196,7 +185,7 @@ namespace SASC_Final.Views
                         var item = _viewModel.Items.FirstOrDefault(x => x.Id == grid.ClassId);
                         var closed = item.IsClosed;
                         //убрать отрицание
-                        if (!closed)
+                        if (closed)
                         {
                             if (item.IsClosedByEmployee)
                             {

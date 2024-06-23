@@ -48,10 +48,10 @@ namespace SASC_Final.ViewModels
 
         public LoginViewModel()
         {
-            username = "t-test1";
+            //username = "t-test1";
             //username = "052100155";
             //username = "052100141";
-            password = "1100111001";
+            //password = "1100111001";
             LoginCommand = new Command(OnLoginClicked);
         }
 
@@ -75,6 +75,7 @@ namespace SASC_Final.ViewModels
             */
             try
             {
+                IsBusy = true;
                 var AppData = DependencyService.Get<AppData>();
                 var authService = DependencyService.Get<IAuth>();
                 var storeService = DependencyService.Get<ILocalStore<PhysicalEntity>>();

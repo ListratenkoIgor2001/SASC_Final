@@ -116,5 +116,11 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\camera_switch.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\beep%283%29.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\beep%282%29.mp3" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

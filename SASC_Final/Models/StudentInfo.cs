@@ -28,7 +28,7 @@ namespace SASC_Final.Models
             LessonId = AppData.CurrentLessons.CurrentItem.LessonId;
             DeviceHash = Convert.ToBase64String(service.GetSerialHash());
             TimeCrt = TimeNbf = DateTime.Now;
-            TimeExp = TimeCrt.AddDays(5).AddSeconds(10);
+            TimeExp = TimeCrt.AddSeconds(10);
         }
 
         public string ToJson()

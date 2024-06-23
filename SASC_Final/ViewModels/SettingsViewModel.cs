@@ -86,14 +86,14 @@ namespace SASC_Final.ViewModels
             IsEmployee = AppData.Role == "Employee";
             StudentFields = new ObservableCollection<KeyValuePair<string, string>>
             {
-                new KeyValuePair<string, string>("Group Number", Group),
-                new KeyValuePair<string, string>("Record Book Number", RecordBookNumber)
+                new KeyValuePair<string, string>("Номер группы", Group),
+                new KeyValuePair<string, string>("Номер зачётной книжки", RecordBookNumber)
             };
 
             EmployeeFields = new ObservableCollection<KeyValuePair<string, string>>
             {
-                new KeyValuePair<string, string>("Degree", Degree),
-                new KeyValuePair<string, string>("Rank", Rank)
+                new KeyValuePair<string, string>("Степень", Degree),
+                new KeyValuePair<string, string>("Должность", Rank)
             };
         }
     }

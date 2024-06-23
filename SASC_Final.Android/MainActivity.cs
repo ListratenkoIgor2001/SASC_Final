@@ -16,6 +16,7 @@ using Microsoft.AppCenter.Crashes;
 using Android;
 using System.Net.NetworkInformation;
 using ZXing.Mobile;
+using Android.Views;
 
 namespace SASC_Final.Droid
 {
@@ -29,6 +30,7 @@ namespace SASC_Final.Droid
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            //Window.AddFlags(WindowManagerFlags.Secure);
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
             if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage) != Permission.Granted ||
             ContextCompat.CheckSelfPermission(this, Manifest.Permission.ReadExternalStorage) != Permission.Granted)

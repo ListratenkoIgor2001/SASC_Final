@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using SASC_Final.Services;
 using SASC_Final.ViewModels;
 
 using Xamarin.Forms;
@@ -18,6 +19,21 @@ namespace SASC_Final.Views
         {
             InitializeComponent();
             BindingContext = new SettingsViewModel();
+        }
+
+        private async void LogoutButton_Clicked(object sender, EventArgs e)
+        {
+            bool answer = await DisplayAlert("Подтверждение", "Выйти из аккаунта?", "Да", "Нет");
+            if (answer)
+            {
+                var AppData = DependencyService.Get<AppData>();
+                DependencyService.Get<IAuth>().Logout();
+                AppData.Clear();
+                Application.Current.SavePropertiesAsync();
+                await Navigation.PopModalAsync();
+                Application.Current.MainPage = new NavigationPage(new LoginPage());
+                //await Navigation.PopToRootAsync();
+            }
         }
     }
 }
